@@ -1,27 +1,10 @@
-# AzListView 
-[![Pub](https://img.shields.io/pub/v/azlistview.svg?style=flat-square)](https://pub.dartlang.org/packages/azlistview)
-AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
-- IndexBar（A-Z 索引Bar） 
-- SuspensionView（悬停效果view）
-- AzListView（对SuspensionView & IndexBar封装，方便使用）
-- SuspensionUtil
-- - sortListBySuspensionTag(list) 根据[A-Z]排序。 
-- - getTagIndexList(list) 获取索引列表。
-- - setShowSuspensionStatus(list) 设置显示悬停Header状态。
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:azlistview/azlistview.dart';
+import 'package:lpinyin/lpinyin.dart';
+import 'city_model.dart';
 
-### APK:[点击下载 v0.1.0](https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/azlistview_release.apk)
-
-### APK QR:
-  ![AzListView](https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/azlistview_qrcode.png)
-
-### iOS：暂无，请自行clone项目代码运行。
-
-### Screenshot
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
-
-### Example
-```
 class CitySelectRoute extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -156,11 +139,3 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
     );
   }
 }
-
-```   
-
-
-
-
-
-

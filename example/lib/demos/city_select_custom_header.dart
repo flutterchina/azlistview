@@ -1,37 +1,20 @@
-# AzListView 
-[![Pub](https://img.shields.io/pub/v/azlistview.svg?style=flat-square)](https://pub.dartlang.org/packages/azlistview)
-AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
-- IndexBar（A-Z 索引Bar） 
-- SuspensionView（悬停效果view）
-- AzListView（对SuspensionView & IndexBar封装，方便使用）
-- SuspensionUtil
-- - sortListBySuspensionTag(list) 根据[A-Z]排序。 
-- - getTagIndexList(list) 获取索引列表。
-- - setShowSuspensionStatus(list) 设置显示悬停Header状态。
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:azlistview/azlistview.dart';
+import 'package:lpinyin/lpinyin.dart';
+import 'city_model.dart';
 
-### APK:[点击下载 v0.1.0](https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/azlistview_release.apk)
-
-### APK QR:
-  ![AzListView](https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/azlistview_qrcode.png)
-
-### iOS：暂无，请自行clone项目代码运行。
-
-### Screenshot
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
-
-### Example
-```
-class CitySelectRoute extends StatefulWidget {
+class CitySelectCustomHeaderRoute extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _CitySelectRouteState();
+    return new _CitySelectCustomHeaderRouteState();
   }
 }
 
-class _CitySelectRouteState extends State<CitySelectRoute> {
+class _CitySelectCustomHeaderRouteState
+    extends State<CitySelectCustomHeaderRoute> {
   List<CityInfo> _cityList = List();
-  List<CityInfo> _hotCityList = List();
 
   int _suspensionHeight = 40;
   int _itemHeight = 50;
@@ -44,13 +27,6 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
   }
 
   void loadData() async {
-    _hotCityList.add(CityInfo(name: "北京市", tagIndex: "★"));
-    _hotCityList.add(CityInfo(name: "广州市", tagIndex: "★"));
-    _hotCityList.add(CityInfo(name: "成都市", tagIndex: "★"));
-    _hotCityList.add(CityInfo(name: "深圳市", tagIndex: "★"));
-    _hotCityList.add(CityInfo(name: "杭州市", tagIndex: "★"));
-    _hotCityList.add(CityInfo(name: "武汉市", tagIndex: "★"));
-
     //加载城市列表
     rootBundle.loadString('assets/data/china.json').then((value) {
       Map countyMap = json.decode(value);
@@ -59,9 +35,7 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
         _cityList.add(CityInfo(name: value['name']));
       });
       _handleList(_cityList);
-      setState(() {
-        _suspensionTag = _hotCityList[0].getSuspensionTag();
-      });
+      setState(() {});
     });
   }
 
@@ -88,8 +62,37 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
     });
   }
 
+  Widget _buildHeader() {
+    List<CityInfo> hotCityList = List();
+    hotCityList.addAll([
+      CityInfo(name: "北京市"),
+      CityInfo(name: "广州市"),
+      CityInfo(name: "成都市"),
+      CityInfo(name: "深圳市"),
+      CityInfo(name: "杭州市"),
+      CityInfo(name: "武汉市"),
+    ]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        runAlignment: WrapAlignment.center,
+        spacing: 10.0,
+        children: hotCityList.map((e) {
+          return OutlineButton(
+            borderSide: BorderSide(color: Colors.grey[300], width: .5),
+            child: Text(e.name),
+            onPressed: () {
+              print("OnItemClick: $e");
+              Navigator.pop(context, e);
+            },
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Widget _buildSusWidget(String susTag) {
-    susTag = (susTag == "★" ? "热门城市" : susTag);
     return Container(
       height: _suspensionHeight.toDouble(),
       padding: const EdgeInsets.only(left: 15.0),
@@ -108,7 +111,6 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
 
   Widget _buildListItem(CityInfo model) {
     String susTag = model.getSuspensionTag();
-    susTag = (susTag == "★" ? "热门城市" : susTag);
     return Column(
       children: <Widget>[
         Offstage(
@@ -133,34 +135,50 @@ class _CitySelectRouteState extends State<CitySelectRoute> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 15.0),
-          height: 50.0,
-          child: Text("当前城市: 成都市"),
+        ListTile(
+            title: Text("当前城市"),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(
+                  Icons.place,
+                  size: 20.0,
+                ),
+                Text(" 成都市"),
+              ],
+            )),
+        Divider(
+          height: .0,
         ),
         Expanded(
             flex: 1,
             child: AzListView(
               data: _cityList,
-              topData: _hotCityList,
               itemBuilder: (context, model) => _buildListItem(model),
               suspensionWidget: _buildSusWidget(_suspensionTag),
               isUseRealIndex: true,
               itemHeight: _itemHeight,
               suspensionHeight: _suspensionHeight,
               onSusTagChanged: _onSusTagChanged,
-              //showCenterTip: false,
+              header: AzListViewHeader(
+                  tag: "★",
+                  height: 140,
+                  builder: (context) {
+                    return _buildHeader();
+                  }),
+              indexHintBuilder: (context, hint) {
+                return Container(
+                  alignment: Alignment.center,
+                  width: 80.0,
+                  height: 80.0,
+                  decoration: BoxDecoration(
+                      color: Colors.black54, shape: BoxShape.circle),
+                  child: Text(hint,
+                      style: TextStyle(color: Colors.white, fontSize: 30.0)),
+                );
+              },
             )),
       ],
     );
   }
 }
-
-```   
-
-
-
-
-
-
