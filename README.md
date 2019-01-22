@@ -1,4 +1,4 @@
-# AzListView 
+# azlistview 
 [![Pub](https://img.shields.io/pub/v/azlistview.svg?style=flat-square)](https://pub.dartlang.org/packages/azlistview)  
 AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
 - IndexBar（A-Z 索引Bar） 
