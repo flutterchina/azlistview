@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PageScaffold extends StatelessWidget {
-  PageScaffold({
-    this.title,
-    this.body
-  });
+  PageScaffold({this.title, this.body});
+
   final String title;
   final Widget body;
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: Text(title),),
+      appBar: AppBar(
+        title: Text(title),
+      ),
       body: body,
     );
   }
@@ -33,18 +33,15 @@ class ListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children:_generateItem(context));
+    return ListView(children: _generateItem(context));
   }
 
-  void _openPage(BuildContext context,PageInfo page) {
+  void _openPage(BuildContext context, PageInfo page) {
     Navigator.push(context, CupertinoPageRoute(builder: (context) {
       if (!page.withScaffold) {
         return page.builder(context);
       }
-      return PageScaffold(
-          title: page.title,
-          body: page.builder(context)
-      );
+      return PageScaffold(title: page.title, body: page.builder(context));
     }));
   }
 
@@ -53,7 +50,7 @@ class ListPage extends StatelessWidget {
       return ListTile(
         title: Text(page.title),
         trailing: Icon(Icons.keyboard_arrow_right),
-        onTap: () => _openPage(context,page),
+        onTap: () => _openPage(context, page),
       );
     }).toList();
   }

@@ -15,11 +15,11 @@ class CityInfo extends ISuspensionBean {
       : name = json['name'] == null ? "" : json['name'];
 
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'tagIndex': tagIndex,
-    'namePinyin': namePinyin,
-    'isShowSuspension': isShowSuspension
-  };
+        'name': name,
+        'tagIndex': tagIndex,
+        'namePinyin': namePinyin,
+        'isShowSuspension': isShowSuspension
+      };
 
   @override
   String getSuspensionTag() => tagIndex;
