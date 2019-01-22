@@ -19,6 +19,13 @@ AzListView，Flutter 城市列表，联系人列表，自定义Header，索引�
 ### Screenshot
 <img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  <img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
 
+### Add dependency
+
+```yaml
+dependencies:
+  azlistview: x.x.x  #latest version
+```
+
 ### Example
 ```
 class CitySelectRoute extends StatefulWidget {
