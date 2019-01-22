@@ -1,5 +1,5 @@
 # AzListView 
-[![Pub](https://img.shields.io/pub/v/azlistview.svg?style=flat-square)](https://pub.dartlang.org/packages/azlistview)
+[![Pub](https://img.shields.io/pub/v/azlistview.svg?style=flat-square)](https://pub.dartlang.org/packages/azlistview)  
 AzListView，Flutter 城市列表，联系人列表，自定义Header，索引，悬停效果。
 - IndexBar（A-Z 索引Bar） 
 - SuspensionView（悬停效果view）
@@ -17,8 +17,7 @@ AzListView，Flutter 城市列表，联系人列表，自定义Header，索引�
 ### iOS：暂无，请自行clone项目代码运行。
 
 ### Screenshot
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
+<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  <img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
 
 ### Example
 ```
