@@ -17,7 +17,7 @@ AzListView，Flutter 城市列表，联系人列表，自定义Header，索引�
 ### iOS：暂无，请自行clone项目代码运行。
 
 ### Screenshot
-<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="200">  <img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="200">   
+<img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/city_select.gif" width="240">  <img src="https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/contact_list.gif" width="240">   
 
 ### Add dependency
 
