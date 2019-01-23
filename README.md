@@ -9,6 +9,9 @@ AzListView，Flutter 城市列表，联系人列表，自定义Header，索引�
 - - getTagIndexList(list) 获取索引列表。
 - - setShowSuspensionStatus(list) 设置显示悬停Header状态。
 
+### 注意
+    新AzListView data需要a-z排过序的列表，请自行调用SuspensionUtil.sortListBySuspensionTag(list)。
+
 ### APK:[点击下载 v0.1.0](https://raw.githubusercontent.com/Sky24n/LDocuments/master/flutterchina/azlistview_release.apk)
 
 ### APK QR:
