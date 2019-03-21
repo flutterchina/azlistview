@@ -237,6 +237,10 @@ class _IndexBarState extends State<_IndexBar> {
         _indexModel.isTouchDown = false;
         _triggerTouchEvent();
       },
+      onTapUp: (TapUpDetails details) {
+        _indexModel.isTouchDown = false;
+        _triggerTouchEvent();
+      },
       child: new Column(
         mainAxisSize: MainAxisSize.min,
         children: children,
