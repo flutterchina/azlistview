@@ -31,15 +31,19 @@ class AzListView extends StatefulWidget {
       this.data,
       this.topData,
       this.itemBuilder,
+      this.controller,
+      this.physics,
+      this.shrinkWrap = true,
+      this.padding = EdgeInsets.zero,
       this.suspensionWidget,
-      this.isUseRealIndex: true,
-      this.itemHeight: 50,
-      this.suspensionHeight: 40,
+      this.isUseRealIndex = true,
+      this.itemHeight = 50,
+      this.suspensionHeight = 40,
       this.onSusTagChanged,
       this.header,
       this.indexBarBuilder,
       this.indexHintBuilder,
-      this.showIndexHint: true})
+      this.showIndexHint = true})
       : assert(itemBuilder != null),
         super(key: key);
 
@@ -50,6 +54,14 @@ class AzListView extends StatefulWidget {
   final List<ISuspensionBean> topData;
 
   final ItemWidgetBuilder itemBuilder;
+
+  final ScrollController controller;
+
+  final ScrollPhysics physics;
+
+  final bool shrinkWrap;
+
+  final EdgeInsetsGeometry padding;
 
   ///suspension widget.
   final Widget suspensionWidget;
@@ -92,12 +104,12 @@ class _AzListViewState extends State<AzListView> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    _scrollController = widget.controller ?? ScrollController();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController?.dispose();
     super.dispose();
   }
 
@@ -146,7 +158,9 @@ class _AzListViewState extends State<AzListView> {
         data: widget.header == null ? _cityList : _cityList.sublist(1),
         contentWidget: ListView.builder(
             controller: _scrollController,
-            shrinkWrap: true,
+            physics: widget.physics,
+            shrinkWrap: widget.shrinkWrap,
+            padding: widget.padding,
             itemCount: _cityList.length,
             itemBuilder: (BuildContext context, int index) {
               if (index == 0 && _cityList[index] is _Header) {

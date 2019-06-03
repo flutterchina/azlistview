@@ -47,10 +47,10 @@ const List<String> INDEX_DATA_DEF = const [
 class IndexBar extends StatefulWidget {
   IndexBar(
       {Key key,
-      this.data: INDEX_DATA_DEF,
+      this.data = INDEX_DATA_DEF,
       @required this.onTouch,
-      this.width: 30,
-      this.itemHeight: 16,
+      this.width = 30,
+      this.itemHeight = 16,
       this.color = Colors.transparent,
       this.textStyle =
           const TextStyle(fontSize: 12.0, color: Color(0xFF666666)),
@@ -137,10 +137,10 @@ class _IndexBar extends StatefulWidget {
 
   _IndexBar(
       {Key key,
-      this.data: INDEX_DATA_DEF,
+      this.data = INDEX_DATA_DEF,
       @required this.onTouch,
-      this.width: 30,
-      this.itemHeight: 16,
+      this.width = 30,
+      this.itemHeight = 16,
       this.textStyle,
       this.touchDownTextStyle})
       : assert(onTouch != null),

@@ -26,7 +26,7 @@ AzListView，Flutter 城市列表，联系人列表，自定义Header，索引�
 
 ```yaml
 dependencies:
-  azlistview: ^0.1.1  #latest version
+  azlistview: ^0.1.2  #latest version
 ```
 
 ### Example
