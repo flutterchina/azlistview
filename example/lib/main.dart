@@ -1,34 +1,43 @@
-import 'package:azlistview_example/demos/index.dart';
-import 'package:azlistview_example/demos/page_scaffold.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+import 'ui/index.dart';
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
+void main() {
+  runApp(MyApp());
+  if (Platform.isAndroid) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  }
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'AzListView Demo',
+      theme: ThemeData(
+        primaryColor: Colors.white,
+        accentColor: Colors.grey,
+        //primarySwatch: Colors.white,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('AzListView example app'),
+          title: const Text(
+            'AzListView',
+          ),
         ),
         body: ListPage([
-          PageInfo("City Select", (ctx) => CitySelectRoute()),
-          PageInfo("City Select(Custom header)",
-              (ctx) => CitySelectCustomHeaderRoute()),
-          PageInfo("Contacts List", (ctx) => ContactListRoute()),
+          PageInfo("Contacts", (ctx) => ContactsPage(), false),
+          PageInfo("Contacts List", (ctx) => ContactListPage()),
+          PageInfo("City List", (ctx) => CityListPage(), false),
           PageInfo(
-              "IndexBar & SuspensionView", (ctx) => IndexSuspensionRoute()),
+              "City List(Custom header)", (ctx) => CityListCustomHeaderPage()),
+          PageInfo("Car models", (ctx) => CarModelsPage(), false),
+          PageInfo("10000 data", (ctx) => LargeDataPage(), false),
         ]),
       ),
     );

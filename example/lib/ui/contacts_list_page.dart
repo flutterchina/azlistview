@@ -1,23 +1,18 @@
-import 'dart:convert';
 import 'package:azlistview/azlistview.dart';
+import 'package:azlistview_example/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lpinyin/lpinyin.dart';
-import 'contact_model.dart';
 
-class ContactListRoute extends StatefulWidget {
+class ContactListPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _ContactListRouteState();
+    return new _ContactListPageState();
   }
 }
 
-class _ContactListRouteState extends State<ContactListRoute> {
+class _ContactListPageState extends State<ContactListPage> {
   List<ContactInfo> _contacts = List();
-
-  int _suspensionHeight = 40;
-  int _itemHeight = 60;
-  String _hitTag = "";
+  double susItemHeight = 40;
 
   @override
   void initState() {
@@ -29,11 +24,10 @@ class _ContactListRouteState extends State<ContactListRoute> {
     //加载联系人列表
     rootBundle.loadString('assets/data/contacts.json').then((value) {
       List list = json.decode(value);
-      list.forEach((value) {
-        _contacts.add(ContactInfo(name: value['name']));
+      list.forEach((v) {
+        _contacts.add(ContactInfo.fromJson(v));
       });
       _handleList(_contacts);
-      setState(() {});
     });
   }
 
@@ -49,12 +43,22 @@ class _ContactListRouteState extends State<ContactListRoute> {
         list[i].tagIndex = "#";
       }
     }
-    //根据A-Z排序
+    // A-Z sort.
     SuspensionUtil.sortListBySuspensionTag(_contacts);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(_contacts);
+
+    // add header.
+    _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
+
+    setState(() {});
   }
 
   Widget _buildHeader() {
-    return Center(
+    return Container(
+      padding: EdgeInsets.all(20),
+      alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -79,7 +83,7 @@ class _ContactListRouteState extends State<ContactListRoute> {
   Widget _buildSusWidget(String susTag) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.0),
-      height: _suspensionHeight.toDouble(),
+      height: susItemHeight,
       width: double.infinity,
       alignment: Alignment.centerLeft,
       child: Row(
@@ -106,56 +110,43 @@ class _ContactListRouteState extends State<ContactListRoute> {
           offstage: model.isShowSuspension != true,
           child: _buildSusWidget(susTag),
         ),
-        SizedBox(
-          height: _itemHeight.toDouble(),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Text(model.name[0]),
+        ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.blue[700],
+            child: Text(
+              model.name[0],
+              style: TextStyle(color: Colors.white),
             ),
-            title: Text(model.name),
-            onTap: () {
-              print("OnItemClick: $model");
-              Navigator.pop(context, model);
-            },
           ),
+          title: Text(model.name),
+          onTap: () {
+            print("OnItemClick: $model");
+            Navigator.pop(context, model);
+          },
         )
       ],
     );
+  }
+
+  Decoration getIndexBarDecoration(Color color) {
+    return BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20.0),
+        border: Border.all(color: Colors.grey[300], width: .5));
   }
 
   @override
   Widget build(BuildContext context) {
     return AzListView(
       data: _contacts,
-      itemBuilder: (context, model) => _buildListItem(model),
-      isUseRealIndex: true,
-      itemHeight: _itemHeight,
-      suspensionHeight: _suspensionHeight,
-      header: AzListViewHeader(
-          height: 180,
-          builder: (context) {
-            return _buildHeader();
-          }),
-      indexBarBuilder: (BuildContext context, List<String> tags,
-          IndexBarTouchCallback onTouch) {
-        return Container(
-          margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(color: Colors.grey[300], width: .5)),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: IndexBar(
-              data: tags,
-              itemHeight: 20,
-              onTouch: (details) {
-                onTouch(details);
-              },
-            ),
-          ),
-        );
+      itemCount: _contacts.length,
+      itemBuilder: (BuildContext context, int index) {
+        if (index == 0) return _buildHeader();
+        ContactInfo model = _contacts[index];
+        return _buildListItem(model);
       },
+      physics: BouncingScrollPhysics(),
+      indexBarData: SuspensionUtil.getTagIndexList(_contacts),
       indexHintBuilder: (context, hint) {
         return Container(
           alignment: Alignment.center,
@@ -169,6 +160,12 @@ class _ContactListRouteState extends State<ContactListRoute> {
               Text(hint, style: TextStyle(color: Colors.white, fontSize: 30.0)),
         );
       },
+      indexBarMargin: EdgeInsets.all(10),
+      indexBarOptions: IndexBarOptions(
+        needRebuild: true,
+        decoration: getIndexBarDecoration(Colors.grey[50]),
+        downDecoration: getIndexBarDecoration(Colors.grey[200]),
+      ),
     );
   }
 }

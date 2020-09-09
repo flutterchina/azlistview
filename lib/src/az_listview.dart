@@ -1,231 +1,199 @@
-import 'package:azlistview/src/az_common.dart';
-import 'package:azlistview/src/index_bar.dart';
-import 'package:azlistview/src/suspension_view.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-/// Called to build children for the listview.
-typedef Widget ItemWidgetBuilder(BuildContext context, ISuspensionBean model);
+import 'az_common.dart';
+import 'index_bar.dart';
+import 'suspension_view.dart';
 
-/// Called to build IndexBar.
-typedef Widget IndexBarBuilder(
-    BuildContext context, List<String> tags, IndexBarTouchCallback onTouch);
-
-/// Called to build index hint.
-typedef Widget IndexHintBuilder(BuildContext context, String hint);
-
-/// _Header.
-class _Header extends ISuspensionBean {
-  String tag;
-
-  @override
-  String getSuspensionTag() => tag;
-
-  @override
-  bool get isShowSuspension => false;
-}
-
-/// AzListView.
+/// AzListView
 class AzListView extends StatefulWidget {
-  AzListView(
-      {Key key,
-      this.data,
-      this.topData,
-      this.itemBuilder,
-      this.controller,
-      this.physics,
-      this.shrinkWrap = true,
-      this.padding = EdgeInsets.zero,
-      this.suspensionWidget,
-      this.isUseRealIndex = true,
-      this.itemHeight = 50,
-      this.suspensionHeight = 40,
-      this.onSusTagChanged,
-      this.header,
-      this.indexBarBuilder,
-      this.indexHintBuilder,
-      this.showIndexHint = true})
-      : assert(itemBuilder != null),
-        super(key: key);
+  AzListView({
+    Key key,
+    @required this.data,
+    @required this.itemCount,
+    @required this.itemBuilder,
+    this.physics,
+    this.padding,
+    this.susItemBuilder,
+    this.susItemHeight = kSusItemHeight,
+    this.susPosition,
+    this.indexHintBuilder,
+    this.indexBarData = kIndexBarData,
+    this.indexBarWidth = kIndexBarWidth,
+    this.indexBarHeight,
+    this.indexBarItemHeight = kIndexBarItemHeight,
+    this.indexBarAlignment = Alignment.centerRight,
+    this.indexBarMargin,
+    this.indexBarOptions = const IndexBarOptions(),
+  }) : super(key: key);
 
-  ///with ISuspensionBean Data
+  /// with  ISuspensionBean Data
   final List<ISuspensionBean> data;
 
-  ///with ISuspensionBean topData, Do not participate in [A-Z] sorting (such as hotList).
-  final List<ISuspensionBean> topData;
+  /// Number of items the [itemBuilder] can produce.
+  final int itemCount;
 
-  final ItemWidgetBuilder itemBuilder;
+  /// Called to build children for the list with
+  /// 0 <= index < itemCount.
+  final IndexedWidgetBuilder itemBuilder;
 
-  final ScrollController controller;
-
+  /// How the scroll view should respond to user input.
+  ///
+  /// For example, determines how the scroll view continues to animate after the
+  /// user stops dragging the scroll view.
+  ///
+  /// See [ScrollView.physics].
   final ScrollPhysics physics;
 
-  final bool shrinkWrap;
+  /// The amount of space by which to inset the children.
+  final EdgeInsets padding;
 
-  final EdgeInsetsGeometry padding;
+  /// Called to build suspension header.
+  final IndexedWidgetBuilder susItemBuilder;
 
-  ///suspension widget.
-  final Widget suspensionWidget;
+  /// Suspension widget Height.
+  final double susItemHeight;
 
-  ///is use real index data.(false: use INDEX_DATA_DEF)
-  final bool isUseRealIndex;
+  /// Suspension item position.
+  final Offset susPosition;
 
-  ///item Height.
-  final int itemHeight;
-
-  ///suspension widget Height.
-  final int suspensionHeight;
-
-  ///on sus tag change callback.
-  final ValueChanged<String> onSusTagChanged;
-
-  final AzListViewHeader header;
-
-  final IndexBarBuilder indexBarBuilder;
-
+  /// IndexHintBuilder.
   final IndexHintBuilder indexHintBuilder;
 
-  final bool showIndexHint;
+  /// Index data.
+  final List<String> indexBarData;
+
+  /// IndexBar Width.
+  final double indexBarWidth;
+
+  /// IndexBar Height.
+  final double indexBarHeight;
+
+  /// IndexBar Item Height.
+  final double indexBarItemHeight;
+
+  /// IndexBar alignment.
+  final AlignmentGeometry indexBarAlignment;
+
+  /// IndexBar margin.
+  final EdgeInsetsGeometry indexBarMargin;
+
+  /// IndexBar options.
+  final IndexBarOptions indexBarOptions;
 
   @override
-  State<StatefulWidget> createState() {
-    return new _AzListViewState();
-  }
+  _AzListViewState createState() => _AzListViewState();
 }
 
 class _AzListViewState extends State<AzListView> {
-  Map<String, int> _suspensionSectionMap = Map();
-  List<ISuspensionBean> _cityList = List();
-  List<String> _indexTagList = List();
-  bool _isShowIndexBarHint = false;
-  String _indexBarHint = "";
+  /// Controller to scroll or jump to a particular item.
+  ItemScrollController itemScrollController = ItemScrollController();
 
-  ScrollController _scrollController;
+  /// Listener that reports the position of items when the list is scrolled.
+  ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+
+  IndexBarDragListener dragListener = IndexBarDragListener.create();
+
+  final GlobalKey<IndexBarState> indexBarGlobalKey = GlobalKey();
+
+  String selectTag = '';
 
   @override
   void initState() {
     super.initState();
-    _scrollController = widget.controller ?? ScrollController();
+    dragListener.dragDetails?.addListener(_valueChanged);
+    if (widget.indexBarOptions.selectItemDecoration != null) {
+      itemPositionsListener.itemPositions?.addListener(_positionsChanged);
+    }
   }
 
   @override
   void dispose() {
-    _scrollController?.dispose();
     super.dispose();
+    dragListener.dragDetails?.removeListener(_valueChanged);
+    if (widget.indexBarOptions.selectItemDecoration != null) {
+      itemPositionsListener.itemPositions?.removeListener(_positionsChanged);
+    }
   }
 
-  void _onIndexBarTouch(IndexBarDetails model) {
-    setState(() {
-      _indexBarHint = model.tag;
-      _isShowIndexBarHint = model.isTouchDown;
-      int offset = _suspensionSectionMap[model.tag];
-      if (offset != null) {
-        _scrollController.jumpTo(offset
-            .toDouble()
-            .clamp(.0, _scrollController.position.maxScrollExtent));
+  int _getIndex(String tag) {
+    for (int i = 0; i < widget.itemCount; i++) {
+      ISuspensionBean bean = widget.data[i];
+      if (tag == bean.getSuspensionTag()) {
+        return i;
       }
-    });
+    }
+    return -1;
   }
 
-  void _init() {
-    _cityList.clear();
-    if (widget.topData != null && widget.topData.isNotEmpty) {
-      _cityList.addAll(widget.topData);
+  void _scrollTopIndex(String tag) {
+    int index = _getIndex(tag);
+    if (index != -1) {
+      itemScrollController.jumpTo(index: index);
     }
-    List<ISuspensionBean> list = widget.data;
-    if (list != null && list.isNotEmpty) {
-//      SuspensionUtil.sortListBySuspensionTag(list);
-      _cityList.addAll(list);
-    }
+  }
 
-    SuspensionUtil.setShowSuspensionStatus(_cityList);
-
-    if (widget.header != null) {
-      _cityList.insert(0, _Header()..tag = widget.header.tag);
+  void _valueChanged() {
+    IndexBarDragDetails details = dragListener.dragDetails.value;
+    String tag = details.tag;
+    if (selectTag != tag &&
+        (details.action == IndexBarDragDetails.actionDown ||
+            details.action == IndexBarDragDetails.actionUpdate)) {
+      selectTag = tag;
+      _scrollTopIndex(tag);
     }
-    _indexTagList.clear();
-    if (widget.isUseRealIndex) {
-      _indexTagList.addAll(SuspensionUtil.getTagIndexList(_cityList));
-    } else {
-      _indexTagList.addAll(INDEX_DATA_DEF);
+  }
+
+  void _positionsChanged() {
+    Iterable<ItemPosition> positions =
+        itemPositionsListener.itemPositions.value;
+    if (positions.isNotEmpty) {
+      ItemPosition itemPosition = positions
+          .where((ItemPosition position) => position.itemTrailingEdge > 0)
+          .reduce((ItemPosition min, ItemPosition position) =>
+              position.itemTrailingEdge < min.itemTrailingEdge
+                  ? position
+                  : min);
+      int index = itemPosition.index;
+      String tag = widget.data[index].getSuspensionTag();
+      if (selectTag != tag) {
+        selectTag = tag;
+        indexBarGlobalKey.currentState?.updateIndex(tag);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _init();
-    var children = <Widget>[
-      SuspensionView(
-        data: widget.header == null ? _cityList : _cityList.sublist(1),
-        contentWidget: ListView.builder(
-            controller: _scrollController,
-            physics: widget.physics,
-            shrinkWrap: widget.shrinkWrap,
-            padding: widget.padding,
-            itemCount: _cityList.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (index == 0 && _cityList[index] is _Header) {
-                return SizedBox(
-                    height: widget.header.height.toDouble(),
-                    child: widget.header.builder(context));
-              }
-              return widget.itemBuilder(context, _cityList[index]);
-            }),
-        suspensionWidget: widget.suspensionWidget,
-        controller: _scrollController,
-        suspensionHeight: widget.suspensionHeight,
-        itemHeight: widget.itemHeight,
-        onSusTagChanged: widget.onSusTagChanged,
-        header: widget.header,
-        onSusSectionInited: (Map<String, int> map) =>
-            _suspensionSectionMap = map,
-      )
-    ];
-
-    Widget indexBar;
-    if (widget.indexBarBuilder == null) {
-      indexBar = IndexBar(
-        data: _indexTagList,
-        width: 36,
-        onTouch: _onIndexBarTouch,
-      );
-    } else {
-      indexBar = widget.indexBarBuilder(
-        context,
-        _indexTagList,
-        _onIndexBarTouch,
-      );
-    }
-    children.add(Align(
-      alignment: Alignment.centerRight,
-      child: indexBar,
-    ));
-    Widget indexHint;
-    if (widget.indexHintBuilder != null) {
-      indexHint = widget.indexHintBuilder(context, '$_indexBarHint');
-    } else {
-      indexHint = Card(
-        color: Colors.black54,
-        child: Container(
-          alignment: Alignment.center,
-          width: 80.0,
-          height: 80.0,
-          child: Text(
-            '$_indexBarHint',
-            style: TextStyle(
-              fontSize: 32.0,
-              color: Colors.white,
-            ),
+    return Stack(
+      children: [
+        SuspensionView(
+          data: widget.data,
+          itemCount: widget.itemCount,
+          itemBuilder: widget.itemBuilder,
+          susItemBuilder: widget.susItemBuilder,
+          susItemHeight: widget.susItemHeight,
+          susPosition: widget.susPosition,
+          itemScrollController: itemScrollController,
+          itemPositionsListener: itemPositionsListener,
+          padding: widget.padding,
+          physics: widget.physics,
+        ),
+        Align(
+          alignment: widget.indexBarAlignment,
+          child: IndexBar(
+            key: indexBarGlobalKey,
+            data: widget.indexBarData,
+            width: widget.indexBarWidth,
+            height: widget.indexBarHeight,
+            itemHeight: widget.indexBarItemHeight,
+            margin: widget.indexBarMargin,
+            indexHintBuilder: widget.indexHintBuilder,
+            indexBarDragListener: dragListener,
+            options: widget.indexBarOptions,
           ),
         ),
-      );
-    }
-
-    if (_isShowIndexBarHint && widget.showIndexHint) {
-      children.add(Center(
-        child: indexHint,
-      ));
-    }
-
-    return new Stack(children: children);
+      ],
+    );
   }
 }

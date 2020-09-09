@@ -37,6 +37,8 @@ class ListPage extends StatelessWidget {
   }
 
   void _openPage(BuildContext context, PageInfo page) {
+    //CupertinoPageRoute
+    //MaterialPageRoute
     Navigator.push(context, CupertinoPageRoute(builder: (context) {
       if (!page.withScaffold) {
         return page.builder(context);

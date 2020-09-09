@@ -1,157 +1,147 @@
-import 'package:azlistview/src/az_common.dart';
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'dart:math' as math;
+import 'az_common.dart';
 
-/// on all sus section callback(map: Used to scroll the list to the specified tag location).
-typedef void OnSusSectionCallBack(Map<String, int> map);
+const double kSusItemHeight = 40;
 
-///Suspension Widget.Currently only supports fixed height items!
+/// SuspensionView.
 class SuspensionView extends StatefulWidget {
-  /// with  ISuspensionBean Data
-  final List<ISuspensionBean> data;
-
-  /// content widget(must contain ListView).
-  final Widget contentWidget;
-
-  /// suspension widget.
-  final Widget suspensionWidget;
-
-  /// ListView ScrollController.
-  final ScrollController controller;
-
-  /// suspension widget Height.
-  final int suspensionHeight;
-
-  /// item Height.
-  final int itemHeight;
-
-  /// on sus tag change callback.
-  final ValueChanged<String> onSusTagChanged;
-
-  /// on sus section callback.
-  final OnSusSectionCallBack onSusSectionInited;
-
-  final AzListViewHeader header;
-
   SuspensionView({
     Key key,
     @required this.data,
-    @required this.contentWidget,
-    @required this.suspensionWidget,
-    @required this.controller,
-    this.suspensionHeight = 40,
-    this.itemHeight = 50,
-    this.onSusTagChanged,
-    this.onSusSectionInited,
-    this.header,
-  })  : assert(contentWidget != null),
-        assert(controller != null),
-        super(key: key);
+    @required this.itemCount,
+    @required this.itemBuilder,
+    this.susItemBuilder,
+    this.susItemHeight = kSusItemHeight,
+    this.susPosition,
+    this.itemScrollController,
+    this.itemPositionsListener,
+    this.physics,
+    this.padding,
+  }) : super(key: key);
+
+  /// Suspension data.
+  final List<ISuspensionBean> data;
+
+  /// Number of items the [itemBuilder] can produce.
+  final int itemCount;
+
+  /// Called to build children for the list with
+  /// 0 <= index < itemCount.
+  final IndexedWidgetBuilder itemBuilder;
+
+  /// Called to build suspension header.
+  final IndexedWidgetBuilder susItemBuilder;
+
+  /// Suspension item Height.
+  final double susItemHeight;
+
+  /// Suspension item position.
+  final Offset susPosition;
+
+  /// Controller for jumping or scrolling to an item.
+  final ItemScrollController itemScrollController;
+
+  /// Notifier that reports the items laid out in the list after each frame.
+  final ItemPositionsListener itemPositionsListener;
+
+  /// How the scroll view should respond to user input.
+  ///
+  /// For example, determines how the scroll view continues to animate after the
+  /// user stops dragging the scroll view.
+  ///
+  /// See [ScrollView.physics].
+  final ScrollPhysics physics;
+
+  /// The amount of space by which to inset the children.
+  final EdgeInsets padding;
 
   @override
-  _SuspensionWidgetState createState() => new _SuspensionWidgetState();
+  _SuspensionViewState createState() => _SuspensionViewState();
 }
 
-class _SuspensionWidgetState extends State<SuspensionView> {
-  int _suspensionTop = 0;
-  int _lastIndex;
-  int _suSectionListLength;
+class _SuspensionViewState extends State<SuspensionView> {
+  /// Controller to scroll or jump to a particular item.
+  ItemScrollController itemScrollController;
 
-  List<int> _suspensionSectionList = new List();
-  Map<String, int> _suspensionSectionMap = new Map();
+  /// Listener that reports the position of items when the list is scrolled.
+  ItemPositionsListener itemPositionsListener;
 
   @override
   void initState() {
     super.initState();
-    if (widget.header != null) {
-      _suspensionTop = -widget.header.height;
+    itemScrollController =
+        widget.itemScrollController ?? ItemScrollController();
+    itemPositionsListener =
+        widget.itemPositionsListener ?? ItemPositionsListener.create();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  /// build sus widget.
+  Widget _buildSusWidget(BuildContext context) {
+    if (widget.susItemBuilder == null) {
+      return Container();
     }
-    widget.controller.addListener(() {
-      int offset = widget.controller.offset.toInt();
-      int _index = _getIndex(offset);
-      if (_index != -1 && _lastIndex != _index) {
-        _lastIndex = _index;
-        if (widget.onSusTagChanged != null) {
-          widget.onSusTagChanged(_suspensionSectionMap.keys.toList()[_index]);
+    return ValueListenableBuilder<Iterable<ItemPosition>>(
+      valueListenable: itemPositionsListener.itemPositions,
+      builder: (ctx, positions, child) {
+        if (positions.isNotEmpty) {
+          ItemPosition itemPosition = positions
+              .where((ItemPosition position) => position.itemTrailingEdge > 0)
+              .reduce((ItemPosition min, ItemPosition position) =>
+                  position.itemTrailingEdge < min.itemTrailingEdge
+                      ? position
+                      : min);
+          if (itemPosition.itemLeadingEdge > 0) return Container();
+          int index = itemPosition.index;
+          double left = 0;
+          double top = 0;
+          if (widget.susPosition != null) {
+            left = widget.susPosition.dx;
+            top = widget.susPosition.dy;
+          } else {
+            int next = math.min(index + 1, widget.itemCount - 1);
+            ISuspensionBean bean = widget.data[next];
+            if (bean.isShowSuspension) {
+              double height =
+                  context.findRenderObject()?.paintBounds?.height ?? 0;
+              double topTemp = itemPosition.itemTrailingEdge * height;
+              top = math.min(widget.susItemHeight, topTemp) -
+                  widget.susItemHeight;
+            }
+          }
+          return Positioned(
+            left: left,
+            top: top,
+            child: widget.susItemBuilder(ctx, index),
+          );
         }
-      }
-    });
-  }
-
-  int _getIndex(int offset) {
-    if (widget.header != null && offset < widget.header.height) {
-      if (_suspensionTop != -widget.header.height &&
-          widget.suspensionWidget != null) {
-        setState(() {
-          _suspensionTop = -widget.header.height;
-        });
-      }
-      return 0;
-    }
-    for (int i = 0; i < _suSectionListLength - 1; i++) {
-      int space = _suspensionSectionList[i + 1] - offset;
-      if (space > 0 && space < widget.suspensionHeight) {
-        space = space - widget.suspensionHeight;
-      } else {
-        space = 0;
-      }
-      if (_suspensionTop != space && widget.suspensionWidget != null) {
-        setState(() {
-          _suspensionTop = space;
-        });
-      }
-      int a = _suspensionSectionList[i];
-      int b = _suspensionSectionList[i + 1];
-      if (offset >= a && offset < b) {
-        return i;
-      }
-      if (offset >= _suspensionSectionList[_suSectionListLength - 1]) {
-        return _suSectionListLength - 1;
-      }
-    }
-    return -1;
-  }
-
-  void _init() {
-    _suspensionSectionMap.clear();
-    int offset = 0;
-    String tag;
-    if (widget.header != null) {
-      _suspensionSectionMap[widget.header.tag] = 0;
-      offset = widget.header.height;
-    }
-    widget.data?.forEach((v) {
-      if (tag != v.getSuspensionTag()) {
-        tag = v.getSuspensionTag();
-        _suspensionSectionMap.putIfAbsent(tag, () => offset);
-        offset = offset + widget.suspensionHeight + widget.itemHeight;
-      } else {
-        offset = offset + widget.itemHeight;
-      }
-    });
-    _suspensionSectionList
-      ..clear()
-      ..addAll(_suspensionSectionMap.values);
-    _suSectionListLength = _suspensionSectionList.length;
-    if (widget.onSusSectionInited != null) {
-      widget.onSusSectionInited(_suspensionSectionMap);
-    }
+        return Container();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    _init();
-    var children = <Widget>[
-      widget.contentWidget,
-    ];
-    if (widget.suspensionWidget != null) {
-      children.add(Positioned(
-        ///-0.1修复部分手机丢失精度问题
-        top: _suspensionTop.toDouble() - 0.1,
-        left: 0.0,
-        right: 0.0,
-        child: widget.suspensionWidget,
-      ));
-    }
-    return Stack(children: children);
+    return Stack(
+      children: <Widget>[
+        widget.itemCount == 0
+            ? Container()
+            : ScrollablePositionedList.builder(
+                itemCount: widget.itemCount,
+                itemBuilder: widget.itemBuilder,
+                itemScrollController: itemScrollController,
+                itemPositionsListener: itemPositionsListener,
+                physics: widget.physics,
+                padding: widget.padding,
+              ),
+        _buildSusWidget(context),
+      ],
+    );
   }
 }
