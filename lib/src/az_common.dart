@@ -1,4 +1,3 @@
-
 /// ISuspension Bean.
 abstract class ISuspensionBean {
   bool isShowSuspension = false;

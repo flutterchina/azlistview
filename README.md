@@ -19,7 +19,7 @@ AzListView, SuspensionView, IndexBar.
 ## Pub
 ```yaml
 dependencies:
-  azlistview: ^1.0.0
+  azlistview: ^1.0.1
 ```
 
 ## Screenshots
