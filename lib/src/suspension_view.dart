@@ -12,11 +12,11 @@ class SuspensionView extends StatefulWidget {
     @required this.data,
     @required this.itemCount,
     @required this.itemBuilder,
+    this.itemScrollController,
+    this.itemPositionsListener,
     this.susItemBuilder,
     this.susItemHeight = kSusItemHeight,
     this.susPosition,
-    this.itemScrollController,
-    this.itemPositionsListener,
     this.physics,
     this.padding,
   }) : super(key: key);
@@ -31,6 +31,12 @@ class SuspensionView extends StatefulWidget {
   /// 0 <= index < itemCount.
   final IndexedWidgetBuilder itemBuilder;
 
+  /// Controller for jumping or scrolling to an item.
+  final ItemScrollController itemScrollController;
+
+  /// Notifier that reports the items laid out in the list after each frame.
+  final ItemPositionsListener itemPositionsListener;
+
   /// Called to build suspension header.
   final IndexedWidgetBuilder susItemBuilder;
 
@@ -39,12 +45,6 @@ class SuspensionView extends StatefulWidget {
 
   /// Suspension item position.
   final Offset susPosition;
-
-  /// Controller for jumping or scrolling to an item.
-  final ItemScrollController itemScrollController;
-
-  /// Notifier that reports the items laid out in the list after each frame.
-  final ItemPositionsListener itemPositionsListener;
 
   /// How the scroll view should respond to user input.
   ///
@@ -90,17 +90,20 @@ class _SuspensionViewState extends State<SuspensionView> {
     return ValueListenableBuilder<Iterable<ItemPosition>>(
       valueListenable: itemPositionsListener.itemPositions,
       builder: (ctx, positions, child) {
-        if (positions.isNotEmpty) {
-          ItemPosition itemPosition = positions
-              .where((ItemPosition position) => position.itemTrailingEdge > 0)
-              .reduce((ItemPosition min, ItemPosition position) =>
-                  position.itemTrailingEdge < min.itemTrailingEdge
-                      ? position
-                      : min);
-          if (itemPosition.itemLeadingEdge > 0) return Container();
-          int index = itemPosition.index;
-          double left = 0;
-          double top = 0;
+        if (positions.isEmpty || widget.itemCount == 0) {
+          return Container();
+        }
+        ItemPosition itemPosition = positions
+            .where((ItemPosition position) => position.itemTrailingEdge > 0)
+            .reduce((ItemPosition min, ItemPosition position) =>
+                position.itemTrailingEdge < min.itemTrailingEdge
+                    ? position
+                    : min);
+        if (itemPosition.itemLeadingEdge > 0) return Container();
+        int index = itemPosition.index;
+        double left = 0;
+        double top = 0;
+        if (index < widget.itemCount) {
           if (widget.susPosition != null) {
             left = widget.susPosition.dx;
             top = widget.susPosition.dy;
@@ -115,13 +118,14 @@ class _SuspensionViewState extends State<SuspensionView> {
                   widget.susItemHeight;
             }
           }
-          return Positioned(
-            left: left,
-            top: top,
-            child: widget.susItemBuilder(ctx, index),
-          );
+        } else {
+          index = 0;
         }
-        return Container();
+        return Positioned(
+          left: left,
+          top: top,
+          child: widget.susItemBuilder(ctx, index),
+        );
       },
     );
   }

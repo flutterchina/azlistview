@@ -1,6 +1,6 @@
 name: azlistview
 description: A Flutter sticky headers & index ListView. IndexBar. such as citylist, contactlist. index and hover effect.
-version: 1.0.1
+version: 1.0.2
 author: Sky24n <sky24no@gmail.com>
 homepage: https://github.com/flutterchina/azlistview
 

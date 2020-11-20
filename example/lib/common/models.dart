@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 
+import 'package:github_language_colors/github_language_colors.dart';
+
 class CityModel extends ISuspensionBean {
   String name;
   String tagIndex;
@@ -74,4 +76,35 @@ class ContactInfo extends ISuspensionBean {
 
   @override
   String toString() => json.encode(this);
+}
+
+class Languages extends GithubLanguage with ISuspensionBean {
+  String tagIndex;
+  String pinyin;
+  String shortPinyin;
+
+  Languages.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> map = super.toJson();
+    void addIfNonNull(String fieldName, dynamic value) {
+      if (value != null) {
+        map[fieldName] = value;
+      }
+    }
+
+//    addIfNonNull('tagIndex', tagIndex);
+    return map;
+  }
+
+  @override
+  String getSuspensionTag() {
+    return tagIndex;
+  }
+
+  @override
+  String toString() {
+    return json.encode(this);
+  }
 }

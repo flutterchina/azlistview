@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         body: ListPage([
+          PageInfo("GitHub Languages", (ctx) => GitHubLanguagePage(), false),
           PageInfo("Contacts", (ctx) => ContactsPage(), false),
           PageInfo("Contacts List", (ctx) => ContactListPage()),
           PageInfo("City List", (ctx) => CityListPage(), false),

@@ -1,3 +1,6 @@
+## 1.0.2
+* TODO: fix bugs and add search classification example.
+
 ## 1.0.1
 * TODO: fix analysis.
 

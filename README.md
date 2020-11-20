@@ -19,14 +19,14 @@ AzListView, SuspensionView, IndexBar.
 ## Pub
 ```yaml
 dependencies:
-  azlistview: ^1.0.1
+  azlistview: ^1.0.2
 ```
 
 ## Screenshots
 
 |![](https://s1.ax1x.com/2020/09/09/w3DOZq.png)|![](https://s1.ax1x.com/2020/09/09/w3rZFK.png)|![](https://s1.ax1x.com/2020/09/09/w3rKQH.png)|
 |:---:|:---:|:---:|
-|![](https://s1.ax1x.com/2020/09/09/w3rJFf.png)|![](https://s1.ax1x.com/2020/09/09/w3rUSg.png)|![](https://s1.ax1x.com/2020/09/09/w3rdyj.png)|
+|![](https://s1.ax1x.com/2020/09/09/w3rJFf.png)|![](https://s1.ax1x.com/2020/09/09/w3rUSg.png)|![](https://s3.ax1x.com/2020/11/20/DQ8MM4.jpg)|
 
 
 ## Changelog

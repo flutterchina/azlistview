@@ -12,6 +12,8 @@ class AzListView extends StatefulWidget {
     @required this.data,
     @required this.itemCount,
     @required this.itemBuilder,
+    this.itemScrollController,
+    this.itemPositionsListener,
     this.physics,
     this.padding,
     this.susItemBuilder,
@@ -36,6 +38,12 @@ class AzListView extends StatefulWidget {
   /// Called to build children for the list with
   /// 0 <= index < itemCount.
   final IndexedWidgetBuilder itemBuilder;
+
+  /// Controller for jumping or scrolling to an item.
+  final ItemScrollController itemScrollController;
+
+  /// Notifier that reports the items laid out in the list after each frame.
+  final ItemPositionsListener itemPositionsListener;
 
   /// How the scroll view should respond to user input.
   ///
@@ -87,10 +95,10 @@ class AzListView extends StatefulWidget {
 
 class _AzListViewState extends State<AzListView> {
   /// Controller to scroll or jump to a particular item.
-  ItemScrollController itemScrollController = ItemScrollController();
+  ItemScrollController itemScrollController;
 
   /// Listener that reports the position of items when the list is scrolled.
-  ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  ItemPositionsListener itemPositionsListener;
 
   IndexBarDragListener dragListener = IndexBarDragListener.create();
 
@@ -101,6 +109,10 @@ class _AzListViewState extends State<AzListView> {
   @override
   void initState() {
     super.initState();
+    itemScrollController =
+        widget.itemScrollController ?? ItemScrollController();
+    itemPositionsListener =
+        widget.itemPositionsListener ?? ItemPositionsListener.create();
     dragListener.dragDetails?.addListener(_valueChanged);
     if (widget.indexBarOptions.selectItemDecoration != null) {
       itemPositionsListener.itemPositions?.addListener(_positionsChanged);
@@ -171,11 +183,11 @@ class _AzListViewState extends State<AzListView> {
           data: widget.data,
           itemCount: widget.itemCount,
           itemBuilder: widget.itemBuilder,
+          itemScrollController: itemScrollController,
+          itemPositionsListener: itemPositionsListener,
           susItemBuilder: widget.susItemBuilder,
           susItemHeight: widget.susItemHeight,
           susPosition: widget.susPosition,
-          itemScrollController: itemScrollController,
-          itemPositionsListener: itemPositionsListener,
           padding: widget.padding,
           physics: widget.physics,
         ),
