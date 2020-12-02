@@ -113,10 +113,10 @@ class _CarModelsPageState extends State<CarModelsPage> {
           needRebuild: true,
           selectTextStyle: TextStyle(
               fontSize: 12,
-              color: Color(0xFF333333),
+              color: Colors.white,
               fontWeight: FontWeight.w500),
           selectItemDecoration:
-              BoxDecoration(shape: BoxShape.circle, color: Color(0xFFEDEDED)),
+              BoxDecoration(shape: BoxShape.circle, color: Color(0xFF333333)),
           indexHintWidth: 96,
           indexHintHeight: 97,
           indexHintDecoration: BoxDecoration(

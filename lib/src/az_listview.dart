@@ -102,7 +102,7 @@ class _AzListViewState extends State<AzListView> {
 
   IndexBarDragListener dragListener = IndexBarDragListener.create();
 
-  final GlobalKey<IndexBarState> indexBarGlobalKey = GlobalKey();
+  final IndexBarController indexBarController = IndexBarController();
 
   String selectTag = '';
 
@@ -148,9 +148,8 @@ class _AzListViewState extends State<AzListView> {
   void _valueChanged() {
     IndexBarDragDetails details = dragListener.dragDetails.value;
     String tag = details.tag;
-    if (selectTag != tag &&
-        (details.action == IndexBarDragDetails.actionDown ||
-            details.action == IndexBarDragDetails.actionUpdate)) {
+    if ((details.action == IndexBarDragDetails.actionDown ||
+        details.action == IndexBarDragDetails.actionUpdate)) {
       selectTag = tag;
       _scrollTopIndex(tag);
     }
@@ -170,7 +169,7 @@ class _AzListViewState extends State<AzListView> {
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {
         selectTag = tag;
-        indexBarGlobalKey.currentState?.updateIndex(tag);
+        indexBarController?.updateTagIndex(tag);
       }
     }
   }
@@ -194,7 +193,6 @@ class _AzListViewState extends State<AzListView> {
         Align(
           alignment: widget.indexBarAlignment,
           child: IndexBar(
-            key: indexBarGlobalKey,
             data: widget.indexBarData,
             width: widget.indexBarWidth,
             height: widget.indexBarHeight,
@@ -203,6 +201,7 @@ class _AzListViewState extends State<AzListView> {
             indexHintBuilder: widget.indexHintBuilder,
             indexBarDragListener: dragListener,
             options: widget.indexBarOptions,
+            controller: indexBarController,
           ),
         ),
       ],

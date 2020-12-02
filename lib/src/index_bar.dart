@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 /// IndexHintBuilder.
 typedef IndexHintBuilder = Widget Function(BuildContext context, String tag);
@@ -194,6 +195,25 @@ class IndexBarOptions {
   final List<String> localImages;
 }
 
+/// IndexBarController.
+class IndexBarController {
+  _IndexBarState _indexBarState;
+
+  bool get isAttached => _indexBarState != null;
+
+  void updateTagIndex(String tag) {
+    _indexBarState?._updateTagIndex(tag);
+  }
+
+  void _attach(_IndexBarState state) {
+    _indexBarState = state;
+  }
+
+  void _detach() {
+    _indexBarState = null;
+  }
+}
+
 /// IndexBar.
 class IndexBar extends StatefulWidget {
   IndexBar({
@@ -206,6 +226,7 @@ class IndexBar extends StatefulWidget {
     this.indexHintBuilder,
     this.indexBarDragListener,
     this.options = const IndexBarOptions(),
+    this.controller,
   }) : super(key: key);
 
   /// Index data.
@@ -232,11 +253,14 @@ class IndexBar extends StatefulWidget {
   /// IndexBar options.
   final IndexBarOptions options;
 
+  /// IndexBarController. If non-null, this can be used to control the state of the IndexBar.
+  final IndexBarController controller;
+
   @override
-  IndexBarState createState() => IndexBarState();
+  _IndexBarState createState() => _IndexBarState();
 }
 
-class IndexBarState extends State<IndexBar> {
+class _IndexBarState extends State<IndexBar> {
   /// overlay entry.
   static OverlayEntry overlayEntry;
 
@@ -249,6 +273,7 @@ class IndexBarState extends State<IndexBar> {
   void initState() {
     super.initState();
     widget.indexBarDragListener?.dragDetails?.addListener(_valueChanged);
+    widget.controller?._attach(this);
   }
 
   void _valueChanged() {
@@ -283,6 +308,7 @@ class IndexBarState extends State<IndexBar> {
 
   @override
   void dispose() {
+    widget.controller?._detach();
     _removeOverlay();
     widget.indexBarDragListener?.dragDetails?.removeListener(_valueChanged);
     super.dispose();
@@ -410,7 +436,7 @@ class IndexBarState extends State<IndexBar> {
     );
   }
 
-  void updateIndex(String tag) {
+  void _updateTagIndex(String tag) {
     if (_isActionDown()) return;
     selectIndex = widget.data.indexOf(tag);
     setState(() {});
@@ -472,50 +498,28 @@ class BaseIndexBar extends StatefulWidget {
 }
 
 class _BaseIndexBarState extends State<BaseIndexBar> {
-  List<double> _indexSectionList = List();
   int lastIndex = -1;
   int _widgetTop = 0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   /// get index.
   int _getIndex(double offset) {
-    for (int i = 0, length = _indexSectionList.length; i < length - 1; i++) {
-      double a = _indexSectionList[i];
-      double b = _indexSectionList[i + 1];
-      if (offset >= a && offset < b) {
-        return i;
-      }
-    }
-    return -1;
+    int index = offset ~/ widget.itemHeight;
+    return math.min(index, widget.data.length - 1);
   }
 
-  void _init() {
-    _indexSectionList.clear();
-    _indexSectionList.add(0);
-    double tempHeight = 0;
-    widget.data?.forEach((value) {
-      tempHeight = tempHeight + widget.itemHeight;
-      _indexSectionList.add(tempHeight);
-    });
-  }
-
+  /// trigger drag event.
   _triggerDragEvent(int action) {
     widget.indexBarDragNotifier?.dragDetails?.value = IndexBarDragDetails(
       action: action,
       index: lastIndex,
       tag: widget.data[lastIndex],
-      localPositionY: _indexSectionList[lastIndex],
-      globalPositionY: _indexSectionList[lastIndex] + _widgetTop,
+      localPositionY: lastIndex * widget.itemHeight,
+      globalPositionY: lastIndex * widget.itemHeight + _widgetTop,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    _init();
     List<Widget> children = List.generate(widget.data.length, (index) {
       Widget child = widget.itemBuilder == null
           ? Center(
@@ -534,14 +538,14 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         Offset topLeftPosition = box.localToGlobal(Offset.zero);
         _widgetTop = topLeftPosition.dy.toInt();
         int index = _getIndex(details.localPosition.dy);
-        if (index != -1) {
+        if (index >= 0) {
           lastIndex = index;
           _triggerDragEvent(IndexBarDragDetails.actionDown);
         }
       },
       onVerticalDragUpdate: (DragUpdateDetails details) {
         int index = _getIndex(details.localPosition.dy);
-        if (index != -1 && lastIndex != index) {
+        if (index >= 0 && lastIndex != index) {
           lastIndex = index;
           _triggerDragEvent(IndexBarDragDetails.actionUpdate);
         }

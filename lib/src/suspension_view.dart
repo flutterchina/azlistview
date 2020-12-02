@@ -130,6 +130,20 @@ class _SuspensionViewState extends State<SuspensionView> {
     );
   }
 
+  Widget _buildItem(BuildContext context, int index) {
+    ISuspensionBean bean = widget.data[index];
+    if (!bean.isShowSuspension || widget.susItemBuilder == null) {
+      return widget.itemBuilder(context, index);
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        widget.susItemBuilder(context, index),
+        widget.itemBuilder(context, index),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -138,7 +152,7 @@ class _SuspensionViewState extends State<SuspensionView> {
             ? Container()
             : ScrollablePositionedList.builder(
                 itemCount: widget.itemCount,
-                itemBuilder: widget.itemBuilder,
+                itemBuilder: (context, index) => _buildItem(context, index),
                 itemScrollController: itemScrollController,
                 itemPositionsListener: itemPositionsListener,
                 physics: widget.physics,

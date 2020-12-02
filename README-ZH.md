@@ -19,7 +19,7 @@ AzListView, SuspensionView, IndexBar.
 ## Pub
 ```yaml
 dependencies:
-  azlistview: ^1.0.2
+  azlistview: ^1.1.0
 ```
 
 ## Screenshots
@@ -31,7 +31,9 @@ dependencies:
 
 ## Changelog
 
-Please see the [Changelog](https://github.com/flutterchina/azlistview/blob/master/CHANGELOG.md) page to know what's recently changed.
+Please see the [Changelog](https://github.com/flutterchina/azlistview/blob/master/CHANGELOG.md) page to know what's recently changed.  
+v1.1.0  
+itemBuilder不要包含Header，因为它是在内部自动合并的。fix #38.
 
 ## App
 [Moss App](https://github.com/Sky24n/Moss)

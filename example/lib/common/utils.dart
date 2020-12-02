@@ -39,23 +39,30 @@ class Utils {
 
   static Widget getListItem(BuildContext context, CityModel model,
       {double susHeight = 40}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Offstage(
-          offstage: !(model.isShowSuspension == true),
-          child: getSusItem(context, model.getSuspensionTag(),
-              susHeight: susHeight),
-        ),
-        ListTile(
-          title: Text(model.name),
-          onTap: () {
-            LogUtil.e("onItemClick : $model");
-            Utils.showSnackBar(context, 'onItemClick : ${model.name}');
-          },
-        )
-      ],
+    return ListTile(
+      title: Text(model.name),
+      onTap: () {
+        LogUtil.e("onItemClick : $model");
+        Utils.showSnackBar(context, 'onItemClick : ${model.name}');
+      },
     );
+//    return Column(
+//      mainAxisSize: MainAxisSize.min,
+//      children: <Widget>[
+//        Offstage(
+//          offstage: !(model.isShowSuspension == true),
+//          child: getSusItem(context, model.getSuspensionTag(),
+//              susHeight: susHeight),
+//        ),
+//        ListTile(
+//          title: Text(model.name),
+//          onTap: () {
+//            LogUtil.e("onItemClick : $model");
+//            Utils.showSnackBar(context, 'onItemClick : ${model.name}');
+//          },
+//        )
+//      ],
+//    );
   }
 
   static Widget getWeChatListItem(
@@ -64,17 +71,18 @@ class Utils {
     double susHeight = 40,
     Color defHeaderBgColor,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Offstage(
-          offstage: !(model.isShowSuspension == true),
-          child: getSusItem(context, model.getSuspensionTag(),
-              susHeight: susHeight),
-        ),
-        getWeChatItem(context, model, defHeaderBgColor: defHeaderBgColor),
-      ],
-    );
+    return getWeChatItem(context, model, defHeaderBgColor: defHeaderBgColor);
+//    return Column(
+//      mainAxisSize: MainAxisSize.min,
+//      children: <Widget>[
+//        Offstage(
+//          offstage: !(model.isShowSuspension == true),
+//          child: getSusItem(context, model.getSuspensionTag(),
+//              susHeight: susHeight),
+//        ),
+//        getWeChatItem(context, model, defHeaderBgColor: defHeaderBgColor),
+//      ],
+//    );
   }
 
   static Widget getWeChatItem(

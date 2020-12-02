@@ -35,8 +35,8 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
 
   @override
   void dispose() {
-    super.dispose();
     textEditingController.dispose();
+    super.dispose();
   }
 
   void loadData() async {
@@ -94,22 +94,12 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
 
   Widget getListItem(BuildContext context, Languages model,
       {double susHeight = 40}) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Offstage(
-          offstage: !(model.isShowSuspension == true),
-          child: getSusItem(context, model.getSuspensionTag(),
-              susHeight: susHeight),
-        ),
-        ListTile(
-          title: Text(model.name),
-          onTap: () {
-            LogUtil.v("onItemClick : $model");
-            Utils.showSnackBar(context, "onItemClick : $model");
-          },
-        )
-      ],
+    return ListTile(
+      title: Text(model.name),
+      onTap: () {
+        LogUtil.v("onItemClick : $model");
+        Utils.showSnackBar(context, "onItemClick : $model");
+      },
     );
   }
 
@@ -185,10 +175,10 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
                   needRebuild: true,
                   selectTextStyle: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF333333),
+                      color: Colors.white,
                       fontWeight: FontWeight.w500),
                   selectItemDecoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Color(0xFFEDEDED)),
+                      shape: BoxShape.circle, color: Color(0xFF333333)),
                   indexHintWidth: 96,
                   indexHintHeight: 97,
                   indexHintDecoration: BoxDecoration(
