@@ -148,8 +148,8 @@ class _AzListViewState extends State<AzListView> {
   void _valueChanged() {
     IndexBarDragDetails details = dragListener.dragDetails.value;
     String tag = details.tag;
-    if ((details.action == IndexBarDragDetails.actionDown ||
-        details.action == IndexBarDragDetails.actionUpdate)) {
+    if (details.action == IndexBarDragDetails.actionDown ||
+        details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
     }
