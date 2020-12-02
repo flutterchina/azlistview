@@ -33,7 +33,7 @@ dependencies:
 
 Please see the [Changelog](https://github.com/flutterchina/azlistview/blob/master/CHANGELOG.md) page to know what's recently changed.  
 v1.1.0  
-itemBuilder do not include the header, because it is automatically merged internally. fix #38.
+itemBuilder do not include the header, because it is automatically merged internally. fix [#38](https://github.com/flutterchina/azlistview/issues/38).
 
 ## App
 Moss ：[moss.apk](https://github.com/Sky24n/Doc/blob/master/apks/moss.apk)

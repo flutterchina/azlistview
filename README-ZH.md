@@ -33,7 +33,7 @@ dependencies:
 
 Please see the [Changelog](https://github.com/flutterchina/azlistview/blob/master/CHANGELOG.md) page to know what's recently changed.  
 v1.1.0  
-itemBuilder不要包含Header，因为它是在内部自动合并的。fix #38.
+itemBuilder不要包含Header，因为它是在内部自动合并的。fix [#38](https://github.com/flutterchina/azlistview/issues/38).
 
 ## App
 [Moss App](https://github.com/Sky24n/Moss)

@@ -1,5 +1,5 @@
 ## 1.1.0
-* TODO: itemBuilder do not include the header, because it is automatically merged internally. fix #38.
+* TODO: itemBuilder do not include the header, because it is automatically merged internally. fix [#38](https://github.com/flutterchina/azlistview/issues/38).
 
 ## 1.0.2
 * TODO: fix bugs and add search classification example.
