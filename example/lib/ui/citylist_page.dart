@@ -9,8 +9,8 @@ class CityListPage extends StatefulWidget {
 }
 
 class _CityListPageState extends State<CityListPage> {
-  List<CityModel> cityList = List();
-  List<CityModel> _hotCityList = List();
+  List<CityModel> cityList = [];
+  List<CityModel> _hotCityList = [];
 
   @override
   void initState() {

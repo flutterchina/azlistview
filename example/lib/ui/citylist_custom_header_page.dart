@@ -10,7 +10,7 @@ class CityListCustomHeaderPage extends StatefulWidget {
 }
 
 class _CityListCustomHeaderPageState extends State<CityListCustomHeaderPage> {
-  List<CityModel> cityList = List();
+  List<CityModel> cityList = [];
   double susItemHeight = 36;
   String imgFavorite = Utils.getImgPath('ic_favorite');
 
@@ -64,7 +64,7 @@ class _CityListCustomHeaderPageState extends State<CityListCustomHeaderPage> {
   }
 
   Widget _buildHeader() {
-    List<CityModel> hotCityList = List();
+    List<CityModel> hotCityList = [];
     hotCityList.addAll([
       CityModel(name: "北京市"),
       CityModel(name: "广州市"),

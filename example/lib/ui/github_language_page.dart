@@ -21,8 +21,8 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
   /// Controller to scroll or jump to a particular item.
   final ItemScrollController itemScrollController = ItemScrollController();
 
-  List<Languages> originList = List();
-  List<Languages> dataList = List();
+  List<Languages> originList = [];
+  List<Languages> dataList = [];
 
   TextEditingController textEditingController;
 

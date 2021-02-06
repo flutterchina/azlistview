@@ -8,7 +8,7 @@ class LargeDataPage extends StatefulWidget {
 }
 
 class _LargeDataPageState extends State<LargeDataPage> {
-  List<CityModel> cityList = List();
+  List<CityModel> cityList = [];
   int numberOfItems = 10000;
   double susItemHeight = 40;
 

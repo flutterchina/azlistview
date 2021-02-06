@@ -11,7 +11,7 @@ class ContactListPage extends StatefulWidget {
 }
 
 class _ContactListPageState extends State<ContactListPage> {
-  List<ContactInfo> _contacts = List();
+  List<ContactInfo> _contacts = [];
   double susItemHeight = 40;
 
   @override

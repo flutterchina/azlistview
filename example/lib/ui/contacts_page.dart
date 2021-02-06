@@ -9,8 +9,8 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
-  List<ContactInfo> contactList = List();
-  List<ContactInfo> topList = List();
+  List<ContactInfo> contactList = [];
+  List<ContactInfo> topList = [];
 
   @override
   void initState() {

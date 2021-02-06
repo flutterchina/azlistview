@@ -19,7 +19,7 @@ AzListView, SuspensionView, IndexBar.
 ## Pub
 ```yaml
 dependencies:
-  azlistview: ^1.1.0
+  azlistview: ^1.1.1
 ```
 
 ## Screenshots
@@ -36,4 +36,4 @@ v1.1.0
 itemBuilder do not include the header, because it is automatically merged internally. fix [#38](https://github.com/flutterchina/azlistview/issues/38).
 
 ## App
-Moss ：[moss.apk](https://github.com/Sky24n/Doc/blob/master/apks/moss.apk)
+[Moss App](https://github.com/Sky24n/Moss)

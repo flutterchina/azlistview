@@ -11,7 +11,7 @@ class CarModelsPage extends StatefulWidget {
 }
 
 class _CarModelsPageState extends State<CarModelsPage> {
-  List<ContactInfo> contactList = List();
+  List<ContactInfo> contactList = [];
 
   double susItemHeight = 24;
 
@@ -112,9 +112,7 @@ class _CarModelsPageState extends State<CarModelsPage> {
         indexBarOptions: IndexBarOptions(
           needRebuild: true,
           selectTextStyle: TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-              fontWeight: FontWeight.w500),
+              fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
           selectItemDecoration:
               BoxDecoration(shape: BoxShape.circle, color: Color(0xFF333333)),
           indexHintWidth: 96,
