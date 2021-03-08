@@ -20,7 +20,8 @@ abstract class IndexBarDragListener {
 /// Internal implementation of [ItemPositionsListener].
 class IndexBarDragNotifier implements IndexBarDragListener {
   @override
-  final ValueNotifier<IndexBarDragDetails> dragDetails = ValueNotifier(null);
+  final ValueNotifier<IndexBarDragDetails> dragDetails =
+      ValueNotifier(IndexBarDragDetails());
 }
 
 /// IndexModel.
@@ -31,12 +32,12 @@ class IndexBarDragDetails {
   static const int actionEnd = 3;
   static const int actionCancel = 4;
 
-  int action;
-  int index; //current touch index.
-  String tag; //current touch tag.
+  int? action;
+  int? index; //current touch index.
+  String? tag; //current touch tag.
 
-  double localPositionY;
-  double globalPositionY;
+  double? localPositionY;
+  double? globalPositionY;
 
   IndexBarDragDetails({
     this.action,
@@ -141,31 +142,31 @@ class IndexBarOptions {
   final bool ignoreDragCancel;
 
   /// IndexBar background color.
-  final Color color;
+  final Color? color;
 
   /// IndexBar down background color.
-  final Color downColor;
+  final Color? downColor;
 
   /// IndexBar decoration.
-  final Decoration decoration;
+  final Decoration? decoration;
 
   /// IndexBar down decoration.
-  final Decoration downDecoration;
+  final Decoration? downDecoration;
 
   /// IndexBar textStyle.
   final TextStyle textStyle;
 
   /// IndexBar down textStyle.
-  final TextStyle downTextStyle;
+  final TextStyle? downTextStyle;
 
   /// IndexBar select textStyle.
-  final TextStyle selectTextStyle;
+  final TextStyle? selectTextStyle;
 
   /// IndexBar down item decoration.
-  final Decoration downItemDecoration;
+  final Decoration? downItemDecoration;
 
   /// IndexBar select item decoration.
-  final Decoration selectItemDecoration;
+  final Decoration? selectItemDecoration;
 
   /// Index hint width.
   final double indexHintWidth;
@@ -186,7 +187,7 @@ class IndexBarOptions {
   final TextStyle indexHintTextStyle;
 
   /// Index hint position.
-  final Offset indexHintPosition;
+  final Offset? indexHintPosition;
 
   /// Index hint offset.
   final Offset indexHintOffset;
@@ -197,7 +198,7 @@ class IndexBarOptions {
 
 /// IndexBarController.
 class IndexBarController {
-  _IndexBarState _indexBarState;
+  _IndexBarState? _indexBarState;
 
   bool get isAttached => _indexBarState != null;
 
@@ -217,17 +218,18 @@ class IndexBarController {
 /// IndexBar.
 class IndexBar extends StatefulWidget {
   IndexBar({
-    Key key,
+    Key? key,
     this.data = kIndexBarData,
     this.width = kIndexBarWidth,
     this.height,
     this.itemHeight = kIndexBarItemHeight,
     this.margin,
     this.indexHintBuilder,
-    this.indexBarDragListener,
+    IndexBarDragListener? indexBarDragListener,
     this.options = const IndexBarOptions(),
     this.controller,
-  }) : super(key: key);
+  })  : indexBarDragNotifier = indexBarDragListener as IndexBarDragNotifier?,
+        super(key: key);
 
   /// Index data.
   final List<String> data;
@@ -236,25 +238,25 @@ class IndexBar extends StatefulWidget {
   final double width;
 
   /// IndexBar height.
-  final double height;
+  final double? height;
 
   /// IndexBar item height(def:16).
   final double itemHeight;
 
   /// Empty space to surround the [decoration] and [child].
-  final EdgeInsetsGeometry margin;
+  final EdgeInsetsGeometry? margin;
 
   /// IndexHint Builder
-  final IndexHintBuilder indexHintBuilder;
+  final IndexHintBuilder? indexHintBuilder;
 
   /// IndexBar drag listener.
-  final IndexBarDragListener indexBarDragListener;
+  final IndexBarDragNotifier? indexBarDragNotifier;
 
   /// IndexBar options.
   final IndexBarOptions options;
 
   /// IndexBarController. If non-null, this can be used to control the state of the IndexBar.
-  final IndexBarController controller;
+  final IndexBarController? controller;
 
   @override
   _IndexBarState createState() => _IndexBarState();
@@ -262,7 +264,7 @@ class IndexBar extends StatefulWidget {
 
 class _IndexBarState extends State<IndexBar> {
   /// overlay entry.
-  static OverlayEntry overlayEntry;
+  static OverlayEntry? overlayEntry;
 
   double floatTop = 0;
   String indexTag = '';
@@ -272,17 +274,18 @@ class _IndexBarState extends State<IndexBar> {
   @override
   void initState() {
     super.initState();
-    widget.indexBarDragListener?.dragDetails?.addListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails?.addListener(_valueChanged);
     widget.controller?._attach(this);
   }
 
   void _valueChanged() {
+    if (widget.indexBarDragNotifier == null) return;
     IndexBarDragDetails details =
-        widget.indexBarDragListener?.dragDetails?.value;
-    selectIndex = details.index;
-    indexTag = details.tag;
-    action = details.action;
-    floatTop = details.globalPositionY +
+        widget.indexBarDragNotifier!.dragDetails.value;
+    selectIndex = details.index!;
+    indexTag = details.tag!;
+    action = details.action!;
+    floatTop = details.globalPositionY! +
         widget.itemHeight / 2 -
         widget.options.indexHintHeight / 2;
 
@@ -310,13 +313,13 @@ class _IndexBarState extends State<IndexBar> {
   void dispose() {
     widget.controller?._detach();
     _removeOverlay();
-    widget.indexBarDragListener?.dragDetails?.removeListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails?.removeListener(_valueChanged);
     super.dispose();
   }
 
   Widget _buildIndexHint(BuildContext context, String tag) {
     if (widget.indexHintBuilder != null) {
-      return widget.indexHintBuilder(context, tag);
+      return widget.indexHintBuilder!(context, tag);
     }
     Widget child;
     TextStyle textStyle = widget.options.indexHintTextStyle;
@@ -342,14 +345,15 @@ class _IndexBarState extends State<IndexBar> {
 
   /// add overlay.
   void _addOverlay(BuildContext context) {
-    OverlayState overlayState = Overlay.of(context);
+    OverlayState? overlayState = Overlay.of(context);
+    if (overlayState == null) return;
     if (overlayEntry == null) {
       overlayEntry = OverlayEntry(builder: (BuildContext ctx) {
         double left;
         double top;
         if (widget.options.indexHintPosition != null) {
-          left = widget.options.indexHintPosition.dx;
-          top = widget.options.indexHintPosition.dy;
+          left = widget.options.indexHintPosition!.dx;
+          top = widget.options.indexHintPosition!.dy;
         } else {
           if (widget.options.indexHintAlignment == Alignment.centerRight) {
             left = MediaQuery.of(context).size.width -
@@ -378,25 +382,23 @@ class _IndexBarState extends State<IndexBar> {
               child: _buildIndexHint(ctx, indexTag),
             ));
       });
-      overlayState.insert(overlayEntry);
+      overlayState.insert(overlayEntry!);
     } else {
       //重新绘制UI，类似setState
-      overlayEntry.markNeedsBuild();
+      overlayEntry?.markNeedsBuild();
     }
   }
 
   /// remove overlay.
   void _removeOverlay() {
-    if (overlayEntry != null) {
-      overlayEntry.remove();
-      overlayEntry = null;
-    }
+    overlayEntry?.remove();
+    overlayEntry = null;
   }
 
   Widget _buildItem(BuildContext context, int index) {
     String tag = widget.data[index];
-    Decoration decoration;
-    TextStyle textStyle;
+    Decoration? decoration;
+    TextStyle? textStyle;
     if (widget.options.downItemDecoration != null) {
       decoration = (_isActionDown() && selectIndex == index)
           ? widget.options.downItemDecoration
@@ -421,9 +423,9 @@ class _IndexBarState extends State<IndexBar> {
     if (localImages.contains(tag)) {
       child = Image.asset(
         tag,
-        width: textStyle.fontSize,
-        height: textStyle.fontSize,
-        color: textStyle.color,
+        width: textStyle?.fontSize,
+        height: textStyle?.fontSize,
+        color: textStyle?.color,
       );
     } else {
       child = Text('$tag', style: textStyle);
@@ -460,7 +462,7 @@ class _IndexBarState extends State<IndexBar> {
         itemBuilder: (BuildContext context, int index) {
           return _buildItem(context, index);
         },
-        indexBarDragNotifier: widget.indexBarDragListener,
+        indexBarDragNotifier: widget.indexBarDragNotifier,
       ),
     );
   }
@@ -468,7 +470,7 @@ class _IndexBarState extends State<IndexBar> {
 
 class BaseIndexBar extends StatefulWidget {
   BaseIndexBar({
-    Key key,
+    Key? key,
     this.data = kIndexBarData,
     this.width = kIndexBarWidth,
     this.itemHeight = kIndexBarItemHeight,
@@ -489,9 +491,9 @@ class BaseIndexBar extends StatefulWidget {
   /// IndexBar text style.
   final TextStyle textStyle;
 
-  final IndexedWidgetBuilder itemBuilder;
+  final IndexedWidgetBuilder? itemBuilder;
 
-  final IndexBarDragNotifier indexBarDragNotifier;
+  final IndexBarDragNotifier? indexBarDragNotifier;
 
   @override
   _BaseIndexBarState createState() => _BaseIndexBarState();
@@ -518,13 +520,22 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
     );
   }
 
+  RenderBox? _getRenderBox(BuildContext context) {
+    RenderObject? renderObject = context.findRenderObject();
+    RenderBox? box;
+    if (renderObject != null) {
+      box = renderObject as RenderBox;
+    }
+    return box;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> children = List.generate(widget.data.length, (index) {
       Widget child = widget.itemBuilder == null
           ? Center(
               child: Text('${widget.data[index]}', style: widget.textStyle))
-          : widget.itemBuilder(context, index);
+          : widget.itemBuilder!(context, index);
       return SizedBox(
         width: widget.width,
         height: widget.itemHeight,
@@ -534,7 +545,8 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
 
     return GestureDetector(
       onVerticalDragDown: (DragDownDetails details) {
-        RenderBox box = context.findRenderObject();
+        RenderBox? box = _getRenderBox(context);
+        if (box == null) return;
         Offset topLeftPosition = box.localToGlobal(Offset.zero);
         _widgetTop = topLeftPosition.dy.toInt();
         int index = _getIndex(details.localPosition.dy);

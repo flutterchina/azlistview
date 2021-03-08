@@ -7,11 +7,11 @@ import 'package:github_language_colors/github_language_colors.dart';
 
 class CityModel extends ISuspensionBean {
   String name;
-  String tagIndex;
-  String namePinyin;
+  String? tagIndex;
+  String? namePinyin;
 
   CityModel({
-    this.name,
+    required this.name,
     this.tagIndex,
     this.namePinyin,
   });
@@ -26,7 +26,7 @@ class CityModel extends ISuspensionBean {
       };
 
   @override
-  String getSuspensionTag() => tagIndex;
+  String getSuspensionTag() => tagIndex!;
 
   @override
   String toString() => json.encode(this);
@@ -34,18 +34,18 @@ class CityModel extends ISuspensionBean {
 
 class ContactInfo extends ISuspensionBean {
   String name;
-  String tagIndex;
-  String namePinyin;
+  String? tagIndex;
+  String? namePinyin;
 
-  Color bgColor;
-  IconData iconData;
+  Color? bgColor;
+  IconData? iconData;
 
-  String img;
-  String id;
-  String firstletter;
+  String? img;
+  String? id;
+  String? firstletter;
 
   ContactInfo({
-    this.name,
+    required this.name,
     this.tagIndex,
     this.namePinyin,
     this.bgColor,
@@ -72,16 +72,16 @@ class ContactInfo extends ISuspensionBean {
       };
 
   @override
-  String getSuspensionTag() => tagIndex;
+  String getSuspensionTag() => tagIndex!;
 
   @override
   String toString() => json.encode(this);
 }
 
 class Languages extends GithubLanguage with ISuspensionBean {
-  String tagIndex;
-  String pinyin;
-  String shortPinyin;
+  String? tagIndex;
+  String? pinyin;
+  String? shortPinyin;
 
   Languages.fromJson(Map<String, dynamic> json) : super.fromJson(json);
 
@@ -100,7 +100,7 @@ class Languages extends GithubLanguage with ISuspensionBean {
 
   @override
   String getSuspensionTag() {
-    return tagIndex;
+    return tagIndex!;
   }
 
   @override

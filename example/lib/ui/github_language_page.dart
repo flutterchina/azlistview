@@ -8,10 +8,10 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class GitHubLanguagePage extends StatefulWidget {
   const GitHubLanguagePage({
-    Key key,
+    Key? key,
     this.fromType,
   }) : super(key: key);
-  final int fromType;
+  final int? fromType;
 
   @override
   _GitHubLanguagePageState createState() => _GitHubLanguagePageState();
@@ -24,7 +24,7 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
   List<Languages> originList = [];
   List<Languages> dataList = [];
 
-  TextEditingController textEditingController;
+  late TextEditingController textEditingController;
 
   @override
   void initState() {

@@ -8,10 +8,10 @@ import 'suspension_view.dart';
 /// AzListView
 class AzListView extends StatefulWidget {
   AzListView({
-    Key key,
-    @required this.data,
-    @required this.itemCount,
-    @required this.itemBuilder,
+    Key? key,
+    required this.data,
+    required this.itemCount,
+    required this.itemBuilder,
     this.itemScrollController,
     this.itemPositionsListener,
     this.physics,
@@ -40,10 +40,10 @@ class AzListView extends StatefulWidget {
   final IndexedWidgetBuilder itemBuilder;
 
   /// Controller for jumping or scrolling to an item.
-  final ItemScrollController itemScrollController;
+  final ItemScrollController? itemScrollController;
 
   /// Notifier that reports the items laid out in the list after each frame.
-  final ItemPositionsListener itemPositionsListener;
+  final ItemPositionsListener? itemPositionsListener;
 
   /// How the scroll view should respond to user input.
   ///
@@ -51,22 +51,22 @@ class AzListView extends StatefulWidget {
   /// user stops dragging the scroll view.
   ///
   /// See [ScrollView.physics].
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
   /// The amount of space by which to inset the children.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// Called to build suspension header.
-  final IndexedWidgetBuilder susItemBuilder;
+  final IndexedWidgetBuilder? susItemBuilder;
 
   /// Suspension widget Height.
   final double susItemHeight;
 
   /// Suspension item position.
-  final Offset susPosition;
+  final Offset? susPosition;
 
   /// IndexHintBuilder.
-  final IndexHintBuilder indexHintBuilder;
+  final IndexHintBuilder? indexHintBuilder;
 
   /// Index data.
   final List<String> indexBarData;
@@ -75,7 +75,7 @@ class AzListView extends StatefulWidget {
   final double indexBarWidth;
 
   /// IndexBar Height.
-  final double indexBarHeight;
+  final double? indexBarHeight;
 
   /// IndexBar Item Height.
   final double indexBarItemHeight;
@@ -84,7 +84,7 @@ class AzListView extends StatefulWidget {
   final AlignmentGeometry indexBarAlignment;
 
   /// IndexBar margin.
-  final EdgeInsetsGeometry indexBarMargin;
+  final EdgeInsetsGeometry? indexBarMargin;
 
   /// IndexBar options.
   final IndexBarOptions indexBarOptions;
@@ -95,10 +95,10 @@ class AzListView extends StatefulWidget {
 
 class _AzListViewState extends State<AzListView> {
   /// Controller to scroll or jump to a particular item.
-  ItemScrollController itemScrollController;
+  late ItemScrollController itemScrollController;
 
   /// Listener that reports the position of items when the list is scrolled.
-  ItemPositionsListener itemPositionsListener;
+  late ItemPositionsListener itemPositionsListener;
 
   IndexBarDragListener dragListener = IndexBarDragListener.create();
 
@@ -113,18 +113,18 @@ class _AzListViewState extends State<AzListView> {
         widget.itemScrollController ?? ItemScrollController();
     itemPositionsListener =
         widget.itemPositionsListener ?? ItemPositionsListener.create();
-    dragListener.dragDetails?.addListener(_valueChanged);
+    dragListener.dragDetails.addListener(_valueChanged);
     if (widget.indexBarOptions.selectItemDecoration != null) {
-      itemPositionsListener.itemPositions?.addListener(_positionsChanged);
+      itemPositionsListener.itemPositions.addListener(_positionsChanged);
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    dragListener.dragDetails?.removeListener(_valueChanged);
+    dragListener.dragDetails.removeListener(_valueChanged);
     if (widget.indexBarOptions.selectItemDecoration != null) {
-      itemPositionsListener.itemPositions?.removeListener(_positionsChanged);
+      itemPositionsListener.itemPositions.removeListener(_positionsChanged);
     }
   }
 
@@ -147,7 +147,7 @@ class _AzListViewState extends State<AzListView> {
 
   void _valueChanged() {
     IndexBarDragDetails details = dragListener.dragDetails.value;
-    String tag = details.tag;
+    String tag = details.tag!;
     if (details.action == IndexBarDragDetails.actionDown ||
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
@@ -169,7 +169,7 @@ class _AzListViewState extends State<AzListView> {
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {
         selectTag = tag;
-        indexBarController?.updateTagIndex(tag);
+        indexBarController.updateTagIndex(tag);
       }
     }
   }

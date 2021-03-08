@@ -1,3 +1,6 @@
+## 2.0.0
+* TODO: Migrate to null-safety.
+
 ## 1.1.1
 * TODO: fix analysis.
 

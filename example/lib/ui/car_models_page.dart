@@ -34,7 +34,7 @@ class _CarModelsPageState extends State<CarModelsPage> {
   }
 
   void _handleList(List<ContactInfo> list) {
-    if (list == null || list.isEmpty) return;
+    if (list.isEmpty) return;
     for (int i = 0, length = list.length; i < length; i++) {
       String pinyin = PinyinHelper.getPinyinE(list[i].name);
       String tag = pinyin.substring(0, 1).toUpperCase();

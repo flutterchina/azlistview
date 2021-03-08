@@ -32,7 +32,7 @@ class _ContactListPageState extends State<ContactListPage> {
   }
 
   void _handleList(List<ContactInfo> list) {
-    if (list == null || list.isEmpty) return;
+    if (list.isEmpty) return;
     for (int i = 0, length = list.length; i < length; i++) {
       String pinyin = PinyinHelper.getPinyinE(list[i].name);
       String tag = pinyin.substring(0, 1).toUpperCase();
@@ -132,7 +132,7 @@ class _ContactListPageState extends State<ContactListPage> {
     return BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: Colors.grey[300], width: .5));
+        border: Border.all(color: Colors.grey[300]!, width: .5));
   }
 
   @override
@@ -153,7 +153,7 @@ class _ContactListPageState extends State<ContactListPage> {
           width: 60.0,
           height: 60.0,
           decoration: BoxDecoration(
-            color: Colors.blue[700].withAlpha(200),
+            color: Colors.blue[700]!.withAlpha(200),
             shape: BoxShape.circle,
           ),
           child:
@@ -163,8 +163,8 @@ class _ContactListPageState extends State<ContactListPage> {
       indexBarMargin: EdgeInsets.all(10),
       indexBarOptions: IndexBarOptions(
         needRebuild: true,
-        decoration: getIndexBarDecoration(Colors.grey[50]),
-        downDecoration: getIndexBarDecoration(Colors.grey[200]),
+        decoration: getIndexBarDecoration(Colors.grey[50]!),
+        downDecoration: getIndexBarDecoration(Colors.grey[200]!),
       ),
     );
   }

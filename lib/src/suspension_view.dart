@@ -8,10 +8,10 @@ const double kSusItemHeight = 40;
 /// SuspensionView.
 class SuspensionView extends StatefulWidget {
   SuspensionView({
-    Key key,
-    @required this.data,
-    @required this.itemCount,
-    @required this.itemBuilder,
+    Key? key,
+    required this.data,
+    required this.itemCount,
+    required this.itemBuilder,
     this.itemScrollController,
     this.itemPositionsListener,
     this.susItemBuilder,
@@ -32,19 +32,19 @@ class SuspensionView extends StatefulWidget {
   final IndexedWidgetBuilder itemBuilder;
 
   /// Controller for jumping or scrolling to an item.
-  final ItemScrollController itemScrollController;
+  final ItemScrollController? itemScrollController;
 
   /// Notifier that reports the items laid out in the list after each frame.
-  final ItemPositionsListener itemPositionsListener;
+  final ItemPositionsListener? itemPositionsListener;
 
   /// Called to build suspension header.
-  final IndexedWidgetBuilder susItemBuilder;
+  final IndexedWidgetBuilder? susItemBuilder;
 
   /// Suspension item Height.
   final double susItemHeight;
 
   /// Suspension item position.
-  final Offset susPosition;
+  final Offset? susPosition;
 
   /// How the scroll view should respond to user input.
   ///
@@ -52,10 +52,10 @@ class SuspensionView extends StatefulWidget {
   /// user stops dragging the scroll view.
   ///
   /// See [ScrollView.physics].
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
   /// The amount of space by which to inset the children.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   @override
   _SuspensionViewState createState() => _SuspensionViewState();
@@ -63,10 +63,10 @@ class SuspensionView extends StatefulWidget {
 
 class _SuspensionViewState extends State<SuspensionView> {
   /// Controller to scroll or jump to a particular item.
-  ItemScrollController itemScrollController;
+  late ItemScrollController itemScrollController;
 
   /// Listener that reports the position of items when the list is scrolled.
-  ItemPositionsListener itemPositionsListener;
+  late ItemPositionsListener itemPositionsListener;
 
   @override
   void initState() {
@@ -105,8 +105,8 @@ class _SuspensionViewState extends State<SuspensionView> {
         double top = 0;
         if (index < widget.itemCount) {
           if (widget.susPosition != null) {
-            left = widget.susPosition.dx;
-            top = widget.susPosition.dy;
+            left = widget.susPosition!.dx;
+            top = widget.susPosition!.dy;
           } else {
             int next = math.min(index + 1, widget.itemCount - 1);
             ISuspensionBean bean = widget.data[next];
@@ -124,7 +124,7 @@ class _SuspensionViewState extends State<SuspensionView> {
         return Positioned(
           left: left,
           top: top,
-          child: widget.susItemBuilder(ctx, index),
+          child: widget.susItemBuilder!(ctx, index),
         );
       },
     );
@@ -138,7 +138,7 @@ class _SuspensionViewState extends State<SuspensionView> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        widget.susItemBuilder(context, index),
+        widget.susItemBuilder!(context, index),
         widget.itemBuilder(context, index),
       ],
     );

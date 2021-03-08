@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PageScaffold extends StatelessWidget {
-  PageScaffold({this.title, this.body});
+  PageScaffold({required this.title, required this.body});
 
   final String title;
   final Widget body;

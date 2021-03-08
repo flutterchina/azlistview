@@ -7,7 +7,7 @@ class Utils {
   }
 
   static void showSnackBar(BuildContext context, String msg) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
         duration: Duration(seconds: 2),
@@ -69,7 +69,7 @@ class Utils {
     BuildContext context,
     ContactInfo model, {
     double susHeight = 40,
-    Color defHeaderBgColor,
+    Color? defHeaderBgColor,
   }) {
     return getWeChatItem(context, model, defHeaderBgColor: defHeaderBgColor);
 //    return Column(
@@ -88,9 +88,9 @@ class Utils {
   static Widget getWeChatItem(
     BuildContext context,
     ContactInfo model, {
-    Color defHeaderBgColor,
+    Color? defHeaderBgColor,
   }) {
-    DecorationImage image;
+    DecorationImage? image;
 //    if (model.img != null && model.img.isNotEmpty) {
 //      image = DecorationImage(
 //        image: CachedNetworkImageProvider(model.img),
