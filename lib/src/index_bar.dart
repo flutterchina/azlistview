@@ -408,10 +408,10 @@ class _IndexBarState extends State<IndexBar> {
     Decoration? decoration;
     TextStyle? textStyle;
     if (widget.options.downItemDecoration != null) {
-      decoration = (_isActionDown() && selectIndex == index)
+      decoration = selectIndex == index
           ? widget.options.downItemDecoration
           : null;
-      textStyle = (_isActionDown() && selectIndex == index)
+      textStyle = selectIndex == index
           ? widget.options.downTextStyle
           : widget.options.textStyle;
     } else if (widget.options.selectItemDecoration != null) {
