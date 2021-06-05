@@ -133,6 +133,7 @@ class IndexBarOptions {
     this.indexHintPosition,
     this.indexHintOffset = Offset.zero,
     this.localImages = const [],
+    this.onSusTagChanged
   });
 
   /// need to rebuild.
@@ -194,6 +195,9 @@ class IndexBarOptions {
 
   /// local images.
   final List<String> localImages;
+
+  /// sustag changed callback
+  final ValueChanged<String> onSusTagChanged;
 }
 
 /// IndexBarController.
@@ -293,6 +297,10 @@ class _IndexBarState extends State<IndexBar> {
       _addOverlay(context);
     } else {
       _removeOverlay();
+    }
+
+    if(widget.options.onSusTagChanged !=null && _isActionDown()){
+      widget.options.onSusTagChanged(indexTag);
     }
 
     if (widget.options.needRebuild) {
