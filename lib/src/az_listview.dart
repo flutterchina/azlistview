@@ -17,6 +17,7 @@ class AzListView extends StatefulWidget {
     this.itemPositionsListener,
     this.physics,
     this.padding,
+    this.hapticFeedback = false,
     this.susItemBuilder,
     this.susItemHeight = kSusItemHeight,
     this.susPosition,
@@ -56,6 +57,8 @@ class AzListView extends StatefulWidget {
 
   /// The amount of space by which to inset the children.
   final EdgeInsets? padding;
+  
+  final bool hapticFeedback;
 
   /// Called to build suspension header.
   final IndexedWidgetBuilder? susItemBuilder;
@@ -153,7 +156,9 @@ class _AzListViewState extends State<AzListView> {
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
-      HapticFeedback.lightImpact();
+      if(hapticFeedback) {
+        HapticFeedback.lightImpact();
+      }
     }
   }
 
