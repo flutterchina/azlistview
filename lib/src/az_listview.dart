@@ -156,7 +156,7 @@ class _AzListViewState extends State<AzListView> {
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
-      if(hapticFeedback) {
+      if(widget.hapticFeedback) {
         HapticFeedback.lightImpact();
       }
     }
