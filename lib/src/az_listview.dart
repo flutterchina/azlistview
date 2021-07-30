@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter/services.dart';
 
 import 'az_common.dart';
 import 'index_bar.dart';
@@ -152,6 +153,7 @@ class _AzListViewState extends State<AzListView> {
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
+      HapticFeedback.lightImpact();
     }
   }
 
