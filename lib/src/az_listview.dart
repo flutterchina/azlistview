@@ -12,6 +12,7 @@ class AzListView extends StatefulWidget {
     required this.data,
     required this.itemCount,
     required this.itemBuilder,
+    this.separatorBuilder,
     this.itemScrollController,
     this.itemPositionsListener,
     this.physics,
@@ -28,6 +29,9 @@ class AzListView extends StatefulWidget {
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
   }) : super(key: key);
+
+  /// Separator builder from ListView.builder
+  final IndexedWidgetBuilder? separatorBuilder;
 
   /// with  ISuspensionBean Data
   final List<ISuspensionBean> data;
@@ -182,6 +186,7 @@ class _AzListViewState extends State<AzListView> {
           data: widget.data,
           itemCount: widget.itemCount,
           itemBuilder: widget.itemBuilder,
+          separatorBuilder: widget.separatorBuilder,
           itemScrollController: itemScrollController,
           itemPositionsListener: itemPositionsListener,
           susItemBuilder: widget.susItemBuilder,
