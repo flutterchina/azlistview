@@ -12,6 +12,7 @@ class SuspensionView extends StatefulWidget {
     required this.data,
     required this.itemCount,
     required this.itemBuilder,
+    this.separatorBuilder,
     this.itemScrollController,
     this.itemPositionsListener,
     this.susItemBuilder,
@@ -20,6 +21,9 @@ class SuspensionView extends StatefulWidget {
     this.physics,
     this.padding,
   }) : super(key: key);
+
+  /// Separator builder from ListView.builder
+  final IndexedWidgetBuilder? separatorBuilder;
 
   /// Suspension data.
   final List<ISuspensionBean> data;
@@ -150,7 +154,8 @@ class _SuspensionViewState extends State<SuspensionView> {
       children: <Widget>[
         widget.itemCount == 0
             ? Container()
-            : ScrollablePositionedList.builder(
+            : ScrollablePositionedList.separated(
+                separatorBuilder: widget.separatorBuilder,
                 itemCount: widget.itemCount,
                 itemBuilder: (context, index) => _buildItem(context, index),
                 itemScrollController: itemScrollController,
