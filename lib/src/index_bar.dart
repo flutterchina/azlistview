@@ -454,7 +454,7 @@ class _IndexBarState extends State<IndexBar> {
       width: widget.width,
       height: widget.height,
       margin: widget.margin,
-      alignment: Alignment.center,
+      alignment: Alignment.topCenter,
       child: BaseIndexBar(
         data: widget.data,
         width: widget.width,
