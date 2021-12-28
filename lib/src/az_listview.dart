@@ -57,7 +57,7 @@ class AzListView extends StatefulWidget {
 
   /// The amount of space by which to inset the children.
   final EdgeInsets? padding;
-  
+
   final bool hapticFeedback;
 
   /// Called to build suspension header.
@@ -86,6 +86,9 @@ class AzListView extends StatefulWidget {
 
   /// IndexBar alignment.
   final AlignmentGeometry indexBarAlignment;
+
+  /// contentIndexBar alignment.
+  final AlignmentGeometry? contentIndexBarAlignment;
 
   /// IndexBar margin.
   final EdgeInsetsGeometry? indexBarMargin;
@@ -156,7 +159,7 @@ class _AzListViewState extends State<AzListView> {
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
-      if(widget.hapticFeedback) {
+      if (widget.hapticFeedback) {
         HapticFeedback.lightImpact();
       }
     }
@@ -206,6 +209,8 @@ class _AzListViewState extends State<AzListView> {
             itemHeight: widget.indexBarItemHeight,
             margin: widget.indexBarMargin,
             indexHintBuilder: widget.indexHintBuilder,
+            contentIndexBarAlignment:
+                widget.contentIndexBarAlignment ?? Alignment.topCenter,
             indexBarDragListener: dragListener,
             options: widget.indexBarOptions,
             controller: indexBarController,

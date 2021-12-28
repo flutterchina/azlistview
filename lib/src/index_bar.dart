@@ -252,6 +252,8 @@ class IndexBar extends StatefulWidget {
   /// IndexBar drag listener.
   final IndexBarDragNotifier? indexBarDragNotifier;
 
+  final AlignmentGeometry contentIndexBarAlignment;
+
   /// IndexBar options.
   final IndexBarOptions options;
 
@@ -454,7 +456,7 @@ class _IndexBarState extends State<IndexBar> {
       width: widget.width,
       height: widget.height,
       margin: widget.margin,
-      alignment: Alignment.topCenter,
+      alignment: widget.contentIndexBarAlignment,
       child: BaseIndexBar(
         data: widget.data,
         width: widget.width,
