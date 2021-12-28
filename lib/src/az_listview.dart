@@ -25,6 +25,7 @@ class AzListView extends StatefulWidget {
     this.indexBarData = kIndexBarData,
     this.indexBarWidth = kIndexBarWidth,
     this.indexBarHeight,
+    this.contentIndexBarAlignment = Alignment.topCenter,
     this.indexBarItemHeight = kIndexBarItemHeight,
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
@@ -88,7 +89,7 @@ class AzListView extends StatefulWidget {
   final AlignmentGeometry indexBarAlignment;
 
   /// contentIndexBar alignment.
-  final AlignmentGeometry? contentIndexBarAlignment;
+  final AlignmentGeometry contentIndexBarAlignment;
 
   /// IndexBar margin.
   final EdgeInsetsGeometry? indexBarMargin;
@@ -209,8 +210,7 @@ class _AzListViewState extends State<AzListView> {
             itemHeight: widget.indexBarItemHeight,
             margin: widget.indexBarMargin,
             indexHintBuilder: widget.indexHintBuilder,
-            contentIndexBarAlignment:
-                widget.contentIndexBarAlignment ?? Alignment.topCenter,
+            contentIndexBarAlignment: widget.contentIndexBarAlignment,
             indexBarDragListener: dragListener,
             options: widget.indexBarOptions,
             controller: indexBarController,

@@ -225,6 +225,7 @@ class IndexBar extends StatefulWidget {
     this.itemHeight = kIndexBarItemHeight,
     this.margin,
     this.indexHintBuilder,
+    this.contentIndexBarAlignment,
     IndexBarDragListener? indexBarDragListener,
     this.options = const IndexBarOptions(),
     this.controller,
