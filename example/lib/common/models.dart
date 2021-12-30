@@ -88,13 +88,6 @@ class Languages extends GithubLanguage with ISuspensionBean {
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> map = super.toJson();
-    void addIfNonNull(String fieldName, dynamic value) {
-      if (value != null) {
-        map[fieldName] = value;
-      }
-    }
-
-//    addIfNonNull('tagIndex', tagIndex);
     return map;
   }
 
