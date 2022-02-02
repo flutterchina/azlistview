@@ -573,8 +573,8 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         //_triggerDragEvent(IndexBarDragDetails.actionUp);
       },
       behavior: HitTestBehavior.translucent,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        clipBehavior: Clip.hardEdge,
         children: children,
       ),
     );
