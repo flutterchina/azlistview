@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
+
 /// IndexHintBuilder.
 typedef IndexHintBuilder = Widget Function(BuildContext context, String tag);
 
@@ -110,6 +112,7 @@ class IndexBarOptions {
   const IndexBarOptions({
     this.needRebuild = false,
     this.ignoreDragCancel = false,
+    this.hapticFeedback = false,
     this.color,
     this.downColor,
     this.decoration,
@@ -140,6 +143,9 @@ class IndexBarOptions {
 
   /// Ignore DragCancel.
   final bool ignoreDragCancel;
+
+  /// Haptic feedback.
+  final bool hapticFeedback;
 
   /// IndexBar background color.
   final Color? color;
@@ -459,6 +465,7 @@ class _IndexBarState extends State<IndexBar> {
         data: widget.data,
         width: widget.width,
         itemHeight: widget.itemHeight,
+        hapticFeedback: widget.options.hapticFeedback,
         itemBuilder: (BuildContext context, int index) {
           return _buildItem(context, index);
         },
@@ -474,8 +481,9 @@ class BaseIndexBar extends StatefulWidget {
     this.data = kIndexBarData,
     this.width = kIndexBarWidth,
     this.itemHeight = kIndexBarItemHeight,
-    this.itemBuilder,
+    this.hapticFeedback = false,
     this.textStyle = const TextStyle(fontSize: 12.0, color: Color(0xFF666666)),
+    this.itemBuilder,
     this.indexBarDragNotifier,
   }) : super(key: key);
 
@@ -487,6 +495,9 @@ class BaseIndexBar extends StatefulWidget {
 
   /// IndexBar item height(def:16).
   final double itemHeight;
+
+  /// Haptic feedback.
+  final bool hapticFeedback;
 
   /// IndexBar text style.
   final TextStyle textStyle;
@@ -511,6 +522,11 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
 
   /// trigger drag event.
   _triggerDragEvent(int action) {
+    if (widget.hapticFeedback &&
+        (action == IndexBarDragDetails.actionDown ||
+            action == IndexBarDragDetails.actionUpdate)) {
+      HapticFeedback.vibrate();
+    }
     widget.indexBarDragNotifier?.dragDetails?.value = IndexBarDragDetails(
       action: action,
       index: lastIndex,
@@ -559,6 +575,8 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         int index = _getIndex(details.localPosition.dy);
         if (index >= 0 && lastIndex != index) {
           lastIndex = index;
+          //HapticFeedback.lightImpact();
+          //HapticFeedback.vibrate();
           _triggerDragEvent(IndexBarDragDetails.actionUpdate);
         }
       },

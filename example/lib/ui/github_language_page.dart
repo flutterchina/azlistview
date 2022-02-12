@@ -173,6 +173,7 @@ class _GitHubLanguagePageState extends State<GitHubLanguagePage> {
                 },
                 indexBarOptions: IndexBarOptions(
                   needRebuild: true,
+                  hapticFeedback: true,
                   selectTextStyle: TextStyle(
                       fontSize: 12,
                       color: Colors.white,
