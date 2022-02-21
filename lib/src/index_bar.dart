@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
+
 /// IndexHintBuilder.
 typedef IndexHintBuilder = Widget Function(BuildContext context, String tag);
 
@@ -475,8 +477,8 @@ class BaseIndexBar extends StatefulWidget {
     this.data = kIndexBarData,
     this.width = kIndexBarWidth,
     this.itemHeight = kIndexBarItemHeight,
-    this.itemBuilder,
     this.textStyle = const TextStyle(fontSize: 12.0, color: Color(0xFF666666)),
+    this.itemBuilder,
     this.indexBarDragNotifier,
   }) : super(key: key);
 
