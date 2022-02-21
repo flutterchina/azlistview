@@ -17,7 +17,6 @@ class AzListView extends StatefulWidget {
     this.itemPositionsListener,
     this.physics,
     this.padding,
-    this.hapticFeedback = false,
     this.susItemBuilder,
     this.susItemHeight = kSusItemHeight,
     this.susPosition,
