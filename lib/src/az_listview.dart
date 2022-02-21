@@ -59,8 +59,6 @@ class AzListView extends StatefulWidget {
   /// The amount of space by which to inset the children.
   final EdgeInsets? padding;
 
-  final bool hapticFeedback;
-
   /// Called to build suspension header.
   final IndexedWidgetBuilder? susItemBuilder;
 
