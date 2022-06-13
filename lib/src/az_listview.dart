@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter/services.dart';
 
 import 'az_common.dart';
 import 'index_bar.dart';
@@ -23,6 +24,7 @@ class AzListView extends StatefulWidget {
     this.indexBarData = kIndexBarData,
     this.indexBarWidth = kIndexBarWidth,
     this.indexBarHeight,
+    this.contentIndexBarAlignment = Alignment.topCenter,
     this.indexBarItemHeight = kIndexBarItemHeight,
     this.hapticFeedback = false,
     this.indexBarAlignment = Alignment.centerRight,
@@ -86,6 +88,9 @@ class AzListView extends StatefulWidget {
 
   /// IndexBar alignment.
   final AlignmentGeometry indexBarAlignment;
+
+  /// contentIndexBar alignment.
+  final AlignmentGeometry contentIndexBarAlignment;
 
   /// IndexBar margin.
   final EdgeInsetsGeometry? indexBarMargin;
@@ -156,6 +161,9 @@ class _AzListViewState extends State<AzListView> {
         details.action == IndexBarDragDetails.actionUpdate) {
       selectTag = tag;
       _scrollTopIndex(tag);
+      if (widget.hapticFeedback) {
+        HapticFeedback.lightImpact();
+      }
     }
   }
 
@@ -203,6 +211,7 @@ class _AzListViewState extends State<AzListView> {
             itemHeight: widget.indexBarItemHeight,
             margin: widget.indexBarMargin,
             indexHintBuilder: widget.indexHintBuilder,
+            contentIndexBarAlignment: widget.contentIndexBarAlignment,
             indexBarDragListener: dragListener,
             options: widget.indexBarOptions,
             controller: indexBarController,

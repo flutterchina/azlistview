@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
@@ -112,7 +110,6 @@ class IndexBarOptions {
   const IndexBarOptions({
     this.needRebuild = false,
     this.ignoreDragCancel = false,
-    this.hapticFeedback = false,
     this.color,
     this.downColor,
     this.decoration,
@@ -143,9 +140,6 @@ class IndexBarOptions {
 
   /// Ignore DragCancel.
   final bool ignoreDragCancel;
-
-  /// Haptic feedback.
-  final bool hapticFeedback;
 
   /// IndexBar background color.
   final Color? color;
@@ -231,6 +225,7 @@ class IndexBar extends StatefulWidget {
     this.itemHeight = kIndexBarItemHeight,
     this.margin,
     this.indexHintBuilder,
+    this.contentIndexBarAlignment = Alignment.topCenter,
     IndexBarDragListener? indexBarDragListener,
     this.options = const IndexBarOptions(),
     this.controller,
@@ -258,6 +253,8 @@ class IndexBar extends StatefulWidget {
   /// IndexBar drag listener.
   final IndexBarDragNotifier? indexBarDragNotifier;
 
+  final AlignmentGeometry contentIndexBarAlignment;
+
   /// IndexBar options.
   final IndexBarOptions options;
 
@@ -280,7 +277,7 @@ class _IndexBarState extends State<IndexBar> {
   @override
   void initState() {
     super.initState();
-    widget.indexBarDragNotifier?.dragDetails?.addListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails.addListener(_valueChanged);
     widget.controller?._attach(this);
   }
 
@@ -319,7 +316,7 @@ class _IndexBarState extends State<IndexBar> {
   void dispose() {
     widget.controller?._detach();
     _removeOverlay();
-    widget.indexBarDragNotifier?.dragDetails?.removeListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails.removeListener(_valueChanged);
     super.dispose();
   }
 
@@ -460,12 +457,11 @@ class _IndexBarState extends State<IndexBar> {
       width: widget.width,
       height: widget.height,
       margin: widget.margin,
-      alignment: Alignment.center,
+      alignment: widget.contentIndexBarAlignment,
       child: BaseIndexBar(
         data: widget.data,
         width: widget.width,
         itemHeight: widget.itemHeight,
-        hapticFeedback: widget.options.hapticFeedback,
         itemBuilder: (BuildContext context, int index) {
           return _buildItem(context, index);
         },
@@ -481,7 +477,6 @@ class BaseIndexBar extends StatefulWidget {
     this.data = kIndexBarData,
     this.width = kIndexBarWidth,
     this.itemHeight = kIndexBarItemHeight,
-    this.hapticFeedback = false,
     this.textStyle = const TextStyle(fontSize: 12.0, color: Color(0xFF666666)),
     this.itemBuilder,
     this.indexBarDragNotifier,
@@ -495,9 +490,6 @@ class BaseIndexBar extends StatefulWidget {
 
   /// IndexBar item height(def:16).
   final double itemHeight;
-
-  /// Haptic feedback.
-  final bool hapticFeedback;
 
   /// IndexBar text style.
   final TextStyle textStyle;
@@ -522,12 +514,7 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
 
   /// trigger drag event.
   _triggerDragEvent(int action) {
-    if (widget.hapticFeedback &&
-        (action == IndexBarDragDetails.actionDown ||
-            action == IndexBarDragDetails.actionUpdate)) {
-      HapticFeedback.vibrate();
-    }
-    widget.indexBarDragNotifier?.dragDetails?.value = IndexBarDragDetails(
+    widget.indexBarDragNotifier?.dragDetails.value = IndexBarDragDetails(
       action: action,
       index: lastIndex,
       tag: widget.data[lastIndex],
@@ -575,8 +562,6 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         int index = _getIndex(details.localPosition.dy);
         if (index >= 0 && lastIndex != index) {
           lastIndex = index;
-          //HapticFeedback.lightImpact();
-          //HapticFeedback.vibrate();
           _triggerDragEvent(IndexBarDragDetails.actionUpdate);
         }
       },
@@ -590,8 +575,8 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         //_triggerDragEvent(IndexBarDragDetails.actionUp);
       },
       behavior: HitTestBehavior.translucent,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Wrap(
+        clipBehavior: Clip.hardEdge,
         children: children,
       ),
     );

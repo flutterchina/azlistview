@@ -112,7 +112,7 @@ class _SuspensionViewState extends State<SuspensionView> {
             ISuspensionBean bean = widget.data[next];
             if (bean.isShowSuspension) {
               double height =
-                  context.findRenderObject()?.paintBounds?.height ?? 0;
+                  context.findRenderObject()?.paintBounds.height ?? 0;
               double topTemp = itemPosition.itemTrailingEdge * height;
               top = math.min(widget.susItemHeight, topTemp) -
                   widget.susItemHeight;
