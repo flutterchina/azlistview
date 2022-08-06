@@ -171,9 +171,9 @@ class _AzListViewState extends State<AzListView> {
       ItemPosition itemPosition = positions
           .where((ItemPosition position) => position.itemTrailingEdge > 0)
           .reduce((ItemPosition min, ItemPosition position) =>
-      position.itemTrailingEdge < min.itemTrailingEdge
-          ? position
-          : min);
+              position.itemTrailingEdge < min.itemTrailingEdge
+                  ? position
+                  : min);
       int index = itemPosition.index;
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {

@@ -21,7 +21,7 @@ abstract class IndexBarDragListener {
 class IndexBarDragNotifier implements IndexBarDragListener {
   @override
   final ValueNotifier<IndexBarDragDetails> dragDetails =
-  ValueNotifier(IndexBarDragDetails());
+      ValueNotifier(IndexBarDragDetails());
 }
 
 /// IndexModel.
@@ -128,7 +128,7 @@ class IndexBarOptions {
       borderRadius: BorderRadius.all(Radius.circular(6)),
     ),
     this.indexHintTextStyle =
-    const TextStyle(fontSize: 24.0, color: Colors.white),
+        const TextStyle(fontSize: 24.0, color: Colors.white),
     this.indexHintChildAlignment = Alignment.center,
     this.indexHintAlignment = Alignment.center,
     this.indexHintPosition,
@@ -412,7 +412,7 @@ class _IndexBarState extends State<IndexBar> {
           : widget.options.textStyle;
     } else if (widget.options.selectItemDecoration != null) {
       decoration =
-      (selectIndex == index) ? widget.options.selectItemDecoration : null;
+          (selectIndex == index) ? widget.options.selectItemDecoration : null;
       textStyle = (selectIndex == index)
           ? widget.options.selectTextStyle
           : widget.options.textStyle;
@@ -548,7 +548,7 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
     List<Widget> children = List.generate(widget.data.length, (index) {
       Widget child = widget.itemBuilder == null
           ? Center(
-          child: Text('${widget.data[index]}', style: widget.textStyle))
+              child: Text('${widget.data[index]}', style: widget.textStyle))
           : widget.itemBuilder!(context, index);
       return SizedBox(
         width: widget.width,

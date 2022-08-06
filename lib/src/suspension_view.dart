@@ -101,9 +101,9 @@ class _SuspensionViewState extends State<SuspensionView> {
         ItemPosition itemPosition = positions
             .where((ItemPosition position) => position.itemTrailingEdge > 0)
             .reduce((ItemPosition min, ItemPosition position) =>
-        position.itemTrailingEdge < min.itemTrailingEdge
-            ? position
-            : min);
+                position.itemTrailingEdge < min.itemTrailingEdge
+                    ? position
+                    : min);
         if (itemPosition.itemLeadingEdge > 0) return const Offstage();
 
         int index = itemPosition.index;
@@ -157,14 +157,14 @@ class _SuspensionViewState extends State<SuspensionView> {
         widget.itemCount == 0
             ? const Offstage()
             : ScrollablePositionedList.builder(
-          itemCount: widget.itemCount,
-          itemBuilder: (context, index) => _buildItem(context, index),
-          itemScrollController: itemScrollController,
-          itemPositionsListener: itemPositionsListener,
-          physics: widget.physics,
-          padding: widget.padding,
-          minCacheExtent: widget.minCacheExtent,
-        ),
+                itemCount: widget.itemCount,
+                itemBuilder: (context, index) => _buildItem(context, index),
+                itemScrollController: itemScrollController,
+                itemPositionsListener: itemPositionsListener,
+                physics: widget.physics,
+                padding: widget.padding,
+                minCacheExtent: widget.minCacheExtent,
+              ),
         _buildSusWidget(context),
       ],
     );
