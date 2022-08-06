@@ -1,4 +1,4 @@
-## 2.0.1 release
+## 2.0.1
 * TODO: 
   - Upgrade version of [scrollable_positioned_list: ^0.3.2](https://pub.flutter-io.cn/packages/scrollable_positioned_list),
   - Upgrade flutter version
