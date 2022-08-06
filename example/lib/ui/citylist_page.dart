@@ -119,7 +119,7 @@ class _CityListPageState extends State<CityListPage> {
                 clipBehavior: Clip.hardEdge,
                 margin: const EdgeInsets.only(left: 8, top: 8, right: 8),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(4.0),
                     topRight: Radius.circular(4.0),
                   ),
