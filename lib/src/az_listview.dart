@@ -28,6 +28,7 @@ class AzListView extends StatefulWidget {
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
+    this.minCacheExtent,
   }) : super(key: key);
 
   /// with  ISuspensionBean Data
@@ -92,6 +93,10 @@ class AzListView extends StatefulWidget {
 
   /// IndexBar options.
   final IndexBarOptions indexBarOptions;
+
+  /// The minimum cache extent used by the underlying scroll lists.
+  /// See [ScrollView.cacheExtent].
+  final double? minCacheExtent;
 
   @override
   _AzListViewState createState() => _AzListViewState();
@@ -166,9 +171,9 @@ class _AzListViewState extends State<AzListView> {
       ItemPosition itemPosition = positions
           .where((ItemPosition position) => position.itemTrailingEdge > 0)
           .reduce((ItemPosition min, ItemPosition position) =>
-              position.itemTrailingEdge < min.itemTrailingEdge
-                  ? position
-                  : min);
+      position.itemTrailingEdge < min.itemTrailingEdge
+          ? position
+          : min);
       int index = itemPosition.index;
       String tag = widget.data[index].getSuspensionTag();
       if (selectTag != tag) {
@@ -193,6 +198,7 @@ class _AzListViewState extends State<AzListView> {
           susPosition: widget.susPosition,
           padding: widget.padding,
           physics: widget.physics,
+          minCacheExtent: widget.minCacheExtent,
         ),
         Align(
           alignment: widget.indexBarAlignment,

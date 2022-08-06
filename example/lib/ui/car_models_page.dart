@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:azlistview/azlistview.dart';
 import 'package:azlistview_example/common/index.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +112,7 @@ class _CarModelsPageState extends State<CarModelsPage> {
           selectTextStyle: TextStyle(
               fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
           selectItemDecoration:
-              BoxDecoration(shape: BoxShape.circle, color: Color(0xFF333333)),
+          BoxDecoration(shape: BoxShape.circle, color: Color(0xFF333333)),
           indexHintWidth: 96,
           indexHintHeight: 97,
           indexHintDecoration: BoxDecoration(

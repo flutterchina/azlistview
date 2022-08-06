@@ -74,14 +74,14 @@ class _CityListPageState extends State<CityListPage> {
         children: <Widget>[
           Expanded(
               child: TextField(
-            autofocus: false,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 10, right: 10),
-                border: InputBorder.none,
-                labelStyle: TextStyle(fontSize: 14, color: Color(0xFF333333)),
-                hintText: '城市中文名或拼音',
-                hintStyle: TextStyle(fontSize: 14, color: Color(0xFFCCCCCC))),
-          )),
+                autofocus: false,
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 10, right: 10),
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(fontSize: 14, color: Color(0xFF333333)),
+                    hintText: '城市中文名或拼音',
+                    hintStyle: TextStyle(fontSize: 14, color: Color(0xFFCCCCCC))),
+              )),
           Container(
             width: 0.33,
             height: 14.0,
@@ -110,51 +110,52 @@ class _CityListPageState extends State<CityListPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: Column(
-        children: [
-          header(),
-          Expanded(
-            child: Material(
-              color: Color(0x80000000),
-              child: Card(
-                clipBehavior: Clip.hardEdge,
-                margin: const EdgeInsets.only(left: 8, top: 8, right: 8),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0)),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(left: 15.0),
-                      height: 50.0,
-                      child: Text("当前城市: 成都市"),
-                    ),
-                    Expanded(
-                      child: AzListView(
-                        data: cityList,
-                        itemCount: cityList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          CityModel model = cityList[index];
-                          return Utils.getListItem(context, model);
-                        },
-                        padding: EdgeInsets.zero,
-                        susItemBuilder: (BuildContext context, int index) {
-                          CityModel model = cityList[index];
-                          String tag = model.getSuspensionTag();
-                          return Utils.getSusItem(context, tag);
-                        },
-                        indexBarData: ['★', ...kIndexBarData],
+            children: [
+              header(),
+              Expanded(
+                child: Material(
+                  color: Color(0x80000000),
+                  child: Card(
+                    clipBehavior: Clip.hardEdge,
+                    margin: const EdgeInsets.only(left: 8, top: 8, right: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
                       ),
-                    )
-                  ],
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.only(left: 15.0),
+                          height: 50.0,
+                          child: Text("当前城市: 成都市"),
+                        ),
+                        Expanded(
+                          child: AzListView(
+                            data: cityList,
+                            itemCount: cityList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              CityModel model = cityList[index];
+                              return Utils.getListItem(context, model);
+                            },
+                            padding: EdgeInsets.zero,
+                            susItemBuilder: (BuildContext context, int index) {
+                              CityModel model = cityList[index];
+                              String tag = model.getSuspensionTag();
+                              return Utils.getSusItem(context, tag);
+                            },
+                            indexBarData: ['★', ...kIndexBarData],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
-      )),
+            ],
+          )),
     );
   }
 }

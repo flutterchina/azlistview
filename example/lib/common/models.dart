@@ -19,11 +19,11 @@ class CityModel extends ISuspensionBean {
   CityModel.fromJson(Map<String, dynamic> json) : name = json['name'];
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+    'name': name,
 //        'tagIndex': tagIndex,
 //        'namePinyin': namePinyin,
 //        'isShowSuspension': isShowSuspension
-      };
+  };
 
   @override
   String getSuspensionTag() => tagIndex!;
@@ -63,13 +63,13 @@ class ContactInfo extends ISuspensionBean {
 
   Map<String, dynamic> toJson() => {
 //        'id': id,
-        'name': name,
-        'img': img,
+    'name': name,
+    'img': img,
 //        'firstletter': firstletter,
 //        'tagIndex': tagIndex,
 //        'namePinyin': namePinyin,
 //        'isShowSuspension': isShowSuspension
-      };
+  };
 
   @override
   String getSuspensionTag() => tagIndex!;
@@ -88,6 +88,7 @@ class Languages extends GithubLanguage with ISuspensionBean {
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> map = super.toJson();
+    // ignore: unused_element
     void addIfNonNull(String fieldName, dynamic value) {
       if (value != null) {
         map[fieldName] = value;

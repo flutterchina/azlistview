@@ -1,16 +1,17 @@
 name: azlistview
 description: A Flutter sticky headers & index ListView. IndexBar. such as citylist, contactlist. index and hover effect.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/flutterchina/azlistview
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.18.0-44.1.beta <3.0.0"
+  flutter: ">=1.24.0-6.0.pre <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   # https://pub.flutter-io.cn/packages/scrollable_positioned_list
-  scrollable_positioned_list: ^0.2.3
+  scrollable_positioned_list: ^0.3.2
 
 dev_dependencies:
   flutter_test:

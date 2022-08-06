@@ -19,6 +19,7 @@ class SuspensionView extends StatefulWidget {
     this.susPosition,
     this.physics,
     this.padding,
+    this.minCacheExtent,
   }) : super(key: key);
 
   /// Suspension data.
@@ -57,6 +58,10 @@ class SuspensionView extends StatefulWidget {
   /// The amount of space by which to inset the children.
   final EdgeInsets? padding;
 
+  /// The minimum cache extent used by the underlying scroll lists.
+  /// See [ScrollView.cacheExtent].
+  final double? minCacheExtent;
+
   @override
   _SuspensionViewState createState() => _SuspensionViewState();
 }
@@ -85,21 +90,22 @@ class _SuspensionViewState extends State<SuspensionView> {
   /// build sus widget.
   Widget _buildSusWidget(BuildContext context) {
     if (widget.susItemBuilder == null) {
-      return Container();
+      return const Offstage();
     }
     return ValueListenableBuilder<Iterable<ItemPosition>>(
       valueListenable: itemPositionsListener.itemPositions,
       builder: (ctx, positions, child) {
         if (positions.isEmpty || widget.itemCount == 0) {
-          return Container();
+          return const Offstage();
         }
         ItemPosition itemPosition = positions
             .where((ItemPosition position) => position.itemTrailingEdge > 0)
             .reduce((ItemPosition min, ItemPosition position) =>
-                position.itemTrailingEdge < min.itemTrailingEdge
-                    ? position
-                    : min);
-        if (itemPosition.itemLeadingEdge > 0) return Container();
+        position.itemTrailingEdge < min.itemTrailingEdge
+            ? position
+            : min);
+        if (itemPosition.itemLeadingEdge > 0) return const Offstage();
+
         int index = itemPosition.index;
         double left = 0;
         double top = 0;
@@ -112,7 +118,7 @@ class _SuspensionViewState extends State<SuspensionView> {
             ISuspensionBean bean = widget.data[next];
             if (bean.isShowSuspension) {
               double height =
-                  context.findRenderObject()?.paintBounds?.height ?? 0;
+                  context.findRenderObject()?.paintBounds.height ?? 0;
               double topTemp = itemPosition.itemTrailingEdge * height;
               top = math.min(widget.susItemHeight, topTemp) -
                   widget.susItemHeight;
@@ -149,15 +155,16 @@ class _SuspensionViewState extends State<SuspensionView> {
     return Stack(
       children: <Widget>[
         widget.itemCount == 0
-            ? Container()
+            ? const Offstage()
             : ScrollablePositionedList.builder(
-                itemCount: widget.itemCount,
-                itemBuilder: (context, index) => _buildItem(context, index),
-                itemScrollController: itemScrollController,
-                itemPositionsListener: itemPositionsListener,
-                physics: widget.physics,
-                padding: widget.padding,
-              ),
+          itemCount: widget.itemCount,
+          itemBuilder: (context, index) => _buildItem(context, index),
+          itemScrollController: itemScrollController,
+          itemPositionsListener: itemPositionsListener,
+          physics: widget.physics,
+          padding: widget.padding,
+          minCacheExtent: widget.minCacheExtent,
+        ),
         _buildSusWidget(context),
       ],
     );
