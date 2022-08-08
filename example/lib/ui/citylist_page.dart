@@ -118,10 +118,11 @@ class _CityListPageState extends State<CityListPage> {
               child: Card(
                 clipBehavior: Clip.hardEdge,
                 margin: const EdgeInsets.only(left: 8, top: 8, right: 8),
-                shape: const RoundedRectangleBorder(
+                shape: RoundedRectangleBorder(
                   borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      topRight: Radius.circular(4.0)),
+                    topLeft: Radius.circular(4.0),
+                    topRight: Radius.circular(4.0),
+                  ),
                 ),
                 child: Column(
                   children: [
