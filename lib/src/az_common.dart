@@ -14,9 +14,14 @@ class SuspensionUtil {
     list.sort((a, b) {
       if (a.getSuspensionTag() == "@" || b.getSuspensionTag() == "#") {
         return -1;
+      } else if (a.getSuspensionTag() == "CY#" || b.getSuspensionTag() == "C") {
+        return 1;
+      }if (a.getSuspensionTag() == "C" || b.getSuspensionTag() == "CY#") {
+        return -1;
       } else if (a.getSuspensionTag() == "#" || b.getSuspensionTag() == "@") {
         return 1;
-      } else {
+      } 
+      else {
         return a.getSuspensionTag().compareTo(b.getSuspensionTag());
       }
     });
