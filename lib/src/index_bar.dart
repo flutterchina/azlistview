@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 
 /// IndexHintBuilder.
 typedef IndexHintBuilder = Widget Function(BuildContext context, String tag);
+typedef IndexWidgetBuilder = Widget Function(BuildContext context, int index);
 
 /// IndexBarDragListener.
 abstract class IndexBarDragListener {
@@ -234,6 +235,7 @@ class IndexBar extends StatefulWidget {
     IndexBarDragListener? indexBarDragListener,
     this.options = const IndexBarOptions(),
     this.controller,
+    this.builder,
   })  : indexBarDragNotifier = indexBarDragListener as IndexBarDragNotifier?,
         super(key: key);
 
@@ -264,6 +266,9 @@ class IndexBar extends StatefulWidget {
   /// IndexBarController. If non-null, this can be used to control the state of the IndexBar.
   final IndexBarController? controller;
 
+  /// The builder of index.
+  final IndexWidgetBuilder? builder; 
+
   @override
   _IndexBarState createState() => _IndexBarState();
 }
@@ -280,7 +285,7 @@ class _IndexBarState extends State<IndexBar> {
   @override
   void initState() {
     super.initState();
-    widget.indexBarDragNotifier?.dragDetails?.addListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails.addListener(_valueChanged);
     widget.controller?._attach(this);
   }
 
@@ -319,7 +324,7 @@ class _IndexBarState extends State<IndexBar> {
   void dispose() {
     widget.controller?._detach();
     _removeOverlay();
-    widget.indexBarDragNotifier?.dragDetails?.removeListener(_valueChanged);
+    widget.indexBarDragNotifier?.dragDetails.removeListener(_valueChanged);
     super.dispose();
   }
 
@@ -466,7 +471,7 @@ class _IndexBarState extends State<IndexBar> {
         width: widget.width,
         itemHeight: widget.itemHeight,
         hapticFeedback: widget.options.hapticFeedback,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: widget.builder ?? (BuildContext context, int index) {
           return _buildItem(context, index);
         },
         indexBarDragNotifier: widget.indexBarDragNotifier,
@@ -527,7 +532,7 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
             action == IndexBarDragDetails.actionUpdate)) {
       HapticFeedback.vibrate();
     }
-    widget.indexBarDragNotifier?.dragDetails?.value = IndexBarDragDetails(
+    widget.indexBarDragNotifier?.dragDetails.value = IndexBarDragDetails(
       action: action,
       index: lastIndex,
       tag: widget.data[lastIndex],
@@ -590,9 +595,11 @@ class _BaseIndexBarState extends State<BaseIndexBar> {
         //_triggerDragEvent(IndexBarDragDetails.actionUp);
       },
       behavior: HitTestBehavior.translucent,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: children,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
       ),
     );
   }

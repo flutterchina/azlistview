@@ -28,6 +28,8 @@ class AzListView extends StatefulWidget {
     this.indexBarAlignment = Alignment.centerRight,
     this.indexBarMargin,
     this.indexBarOptions = const IndexBarOptions(),
+    this.indexBuilder,
+    this.shrinkWrap = false,
   }) : super(key: key);
 
   /// with  ISuspensionBean Data
@@ -92,6 +94,13 @@ class AzListView extends StatefulWidget {
 
   /// IndexBar options.
   final IndexBarOptions indexBarOptions;
+
+  /// The builder of index.
+  final IndexWidgetBuilder? indexBuilder;
+  /// The shrinkWrap of list.
+  /// 
+  /// The default value is [false].
+  final bool shrinkWrap;
 
   @override
   _AzListViewState createState() => _AzListViewState();
@@ -193,6 +202,7 @@ class _AzListViewState extends State<AzListView> {
           susPosition: widget.susPosition,
           padding: widget.padding,
           physics: widget.physics,
+          shrinkWrap: widget.shrinkWrap,
         ),
         Align(
           alignment: widget.indexBarAlignment,
@@ -206,6 +216,7 @@ class _AzListViewState extends State<AzListView> {
             indexBarDragListener: dragListener,
             options: widget.indexBarOptions,
             controller: indexBarController,
+            builder: widget.indexBuilder,
           ),
         ),
       ],
