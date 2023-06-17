@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'AzListView Demo',
       theme: ThemeData(
         primaryColor: Colors.white,
-        accentColor: Colors.grey,
+        hintColor: Colors.grey,
         //primarySwatch: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
