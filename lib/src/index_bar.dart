@@ -55,6 +55,7 @@ const List<String> kIndexBarData = const [
   'A',
   'B',
   'C',
+  'Č',
   'D',
   'E',
   'F',
@@ -71,6 +72,7 @@ const List<String> kIndexBarData = const [
   'Q',
   'R',
   'S',
+  'Š',
   'T',
   'U',
   'V',
@@ -78,6 +80,7 @@ const List<String> kIndexBarData = const [
   'X',
   'Y',
   'Z',
+  'Ž',
   '#'
 ];
 
